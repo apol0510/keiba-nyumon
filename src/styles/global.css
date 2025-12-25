@@ -1,0 +1,200 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #ffffff;
+  --color-primary-dark: #f9fafb;
+  --color-secondary: #f3f4f6;
+  --color-accent: #e5e7eb;
+}
+
+/* ガラスモーフィズム用グラデーション背景 */
+html {
+  -webkit-text-size-adjust: 100%;
+  -moz-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+
+body {
+  font-family: 'Noto Sans JP', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
+
+  /* 白系グラデーション背景 */
+  background: linear-gradient(135deg,
+    #ffffff 0%,
+    #f8f9fa 25%,
+    #f1f3f5 50%,
+    #e9ecef 75%,
+    #dee2e6 100%
+  );
+  background-size: 400% 400%;
+  animation: gradientShift 15s ease infinite;
+}
+
+/* アニメーションするグラデーション */
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* キラキラパーティクル背景 */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image:
+    radial-gradient(circle at 20% 50%, rgba(173, 216, 230, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(176, 224, 230, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 40% 20%, rgba(224, 255, 255, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 60% 60%, rgba(240, 248, 255, 0.2) 0%, transparent 50%),
+    radial-gradient(circle at 90% 30%, rgba(230, 230, 250, 0.15) 0%, transparent 50%);
+  background-size: 200% 200%;
+  animation: sparkle 20s ease-in-out infinite;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes sparkle {
+  0%, 100% {
+    opacity: 0.5;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.1);
+  }
+}
+
+/* メインコンテンツを背景より前面に */
+body > * {
+  position: relative;
+  z-index: 10;
+}
+
+/* ガラスモーフィズム共通スタイル */
+.glass {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(220, 220, 220, 0.3);
+  box-shadow:
+    0 8px 32px 0 rgba(0, 0, 0, 0.08),
+    inset 0 0 20px rgba(255, 255, 255, 0.5);
+}
+
+.glass-strong {
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(30px);
+  -webkit-backdrop-filter: blur(30px);
+  border: 1px solid rgba(220, 220, 220, 0.4);
+  box-shadow:
+    0 12px 40px 0 rgba(0, 0, 0, 0.1),
+    inset 0 0 30px rgba(255, 255, 255, 0.6);
+}
+
+/* ホバー時のキラキラエフェクト */
+.glass-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glass-hover:hover {
+  background: rgba(255, 255, 255, 0.9);
+  border-color: rgba(200, 200, 200, 0.5);
+  box-shadow:
+    0 16px 48px 0 rgba(0, 0, 0, 0.12),
+    inset 0 0 40px rgba(255, 255, 255, 0.7);
+  transform: translateY(-4px);
+}
+
+/* グローエフェクト */
+.glow {
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    box-shadow:
+      0 0 10px rgba(100, 181, 246, 0.3),
+      0 0 20px rgba(173, 216, 230, 0.2),
+      0 8px 32px 0 rgba(0, 0, 0, 0.08);
+  }
+  to {
+    box-shadow:
+      0 0 20px rgba(100, 181, 246, 0.5),
+      0 0 30px rgba(173, 216, 230, 0.4),
+      0 12px 40px 0 rgba(0, 0, 0, 0.1);
+  }
+}
+
+/* キラキラ星エフェクト */
+.sparkle {
+  position: relative;
+  overflow: hidden;
+}
+
+.sparkle::after {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: rotate(45deg);
+  animation: sparkleMove 3s infinite;
+}
+
+@keyframes sparkleMove {
+  0% {
+    transform: translateX(-100%) translateY(-100%) rotate(45deg);
+  }
+  100% {
+    transform: translateX(100%) translateY(100%) rotate(45deg);
+  }
+}
+
+/* 文字のグロー */
+.text-glow {
+  text-shadow:
+    0 0 10px rgba(100, 181, 246, 0.5),
+    0 0 20px rgba(173, 216, 230, 0.3),
+    2px 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* スクロールバーのスタイリング */
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(230, 230, 230, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #b0e0e6, #87ceeb);
+  border-radius: 6px;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, #87ceeb, #5dade2);
+}
