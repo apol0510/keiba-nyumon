@@ -1,5 +1,6 @@
 [build]
-  # keiba-bディレクトリ内で完結（モノレポ対応）
+  # keiba-guide（独立プロジェクト）
+  base = "."
   command = "npm install && npm run build"
   publish = "dist"
 
@@ -19,10 +20,10 @@
 
 # HTMLのキャッシュ（1時間、CDNで1日）
 [[headers]]
-  for = "/keiba-yosou/*"
+  for = "/news/*"
   [headers.values]
     Cache-Control = "public, max-age=3600, s-maxage=86400, stale-while-revalidate=604800"
-    
+
 [[headers]]
   for = "/*.html"
   [headers.values]
