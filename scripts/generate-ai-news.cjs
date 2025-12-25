@@ -237,13 +237,17 @@ async function generateArticle(template, topic) {
 
     console.log(`  ✅ 生成完了（${content.length}文字）`);
 
+    // 日本時間で公開日時を設定（YYYY-MM-DDTHH:mm:ss.000Z形式）
+    const now = new Date();
+    const publishedAt = new Date(now.getTime() + (9 * 60 * 60 * 1000)).toISOString(); // JST = UTC+9
+
     return {
       Title: title,
       Slug: generateSlug(title),
       Category: template.category,
       Excerpt: excerpt,
       Content: content.trim(),
-      PublishedAt: new Date().toISOString().split('T')[0], // YYYY-MM-DD形式
+      PublishedAt: publishedAt,
       Status: 'published',
       IsFeatured: Math.random() < 0.3, // 30%の確率で注目記事
       Author: 'AI編集部'
