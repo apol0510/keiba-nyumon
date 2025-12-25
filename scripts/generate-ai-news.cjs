@@ -273,12 +273,20 @@ async function saveNewsArticle(article) {
  */
 async function main() {
   console.log('🚀 AI記事自動生成を開始します\n');
-  console.log(`📊 Airtable Base: ${baseId}\n`);
 
+  // 環境変数チェック
   if (!anthropicApiKey) {
-    console.error('❌ ANTHROPIC_API_KEY must be set');
+    console.error('❌ ANTHROPIC_API_KEY が設定されていません');
     process.exit(1);
   }
+
+  if (!airtableApiKey) {
+    console.error('❌ KEIBA_GUIDE_AIRTABLE_API_KEY または AIRTABLE_API_KEY が設定されていません');
+    process.exit(1);
+  }
+
+  console.log(`📊 Airtable Base: ${baseId}`);
+  console.log(`🤖 AI Model: Claude Sonnet 4.5\n`);
 
   // 生成する記事数（デフォルト: 3記事）
   const articleCount = parseInt(process.env.ARTICLE_COUNT || '3', 10);
