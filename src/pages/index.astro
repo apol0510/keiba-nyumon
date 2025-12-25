@@ -10,7 +10,7 @@ let newsArticles = [];
 let timelineItems = [];
 
 try {
-  newsArticles = await getLatestNews(10);
+  newsArticles = await getLatestNews(100);
   timelineItems = await getTimelineItems(6);
   console.log(`✅ 記事を${newsArticles.length}件取得しました`);
   newsArticles.forEach((article, i) => {

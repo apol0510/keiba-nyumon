@@ -18,22 +18,8 @@ interface Props {
 
 const { title, slug, category, excerpt, publishedAt, viewCount, thumbnail, isFeatured = false, tags = [] } = Astro.props;
 
-// 相対時間を計算
-function getRelativeTime(date: Date): string {
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const hours = Math.floor(diff / (1000 * 60 * 60));
-
-  if (hours < 1) {
-    const minutes = Math.floor(diff / (1000 * 60));
-    return `${minutes}分前`;
-  } else if (hours < 24) {
-    return `${hours}時間前`;
-  } else {
-    const days = Math.floor(hours / 24);
-    return `${days}日前`;
-  }
-}
+// ISO文字列に変換（クライアント側で計算するため）
+const publishedAtISO = new Date(publishedAt).toISOString();
 
 // 閲覧数のフォーマット
 function formatViewCount(count: number): string {
@@ -56,7 +42,6 @@ const badgeColors: Record<string, string> = {
 };
 
 const badgeClass = badgeColors[category] || 'badge-default';
-const relativeTime = getRelativeTime(publishedAt);
 const formattedViews = formatViewCount(viewCount);
 ---
 
@@ -99,7 +84,7 @@ const formattedViews = formatViewCount(viewCount);
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
           </svg>
-          {relativeTime}
+          <time class="relative-time" data-published-at={publishedAtISO}>計算中...</time>
         </span>
         <span class="meta-item">
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -331,3 +316,49 @@ const formattedViews = formatViewCount(viewCount);
     }
   }
 </style>
+
+<script>
+  // クライアント側で相対時間を計算
+  function updateRelativeTimes() {
+    const timeElements = document.querySelectorAll('.relative-time');
+
+    timeElements.forEach((element) => {
+      const publishedAt = element.getAttribute('data-published-at');
+      if (!publishedAt) return;
+
+      const publishedDate = new Date(publishedAt);
+      const now = new Date();
+      const diff = now.getTime() - publishedDate.getTime();
+
+      const minutes = Math.floor(diff / (1000 * 60));
+      const hours = Math.floor(diff / (1000 * 60 * 60));
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+
+      let relativeTime = '';
+
+      if (minutes < 1) {
+        relativeTime = 'たった今';
+      } else if (hours < 1) {
+        relativeTime = `${minutes}分前`;
+      } else if (hours < 24) {
+        relativeTime = `${hours}時間前`;
+      } else if (days < 30) {
+        relativeTime = `${days}日前`;
+      } else {
+        // 30日以上の場合は日付を表示
+        const year = publishedDate.getFullYear();
+        const month = publishedDate.getMonth() + 1;
+        const day = publishedDate.getDate();
+        relativeTime = `${year}/${month}/${day}`;
+      }
+
+      element.textContent = relativeTime;
+    });
+  }
+
+  // ページ読み込み時に実行
+  updateRelativeTimes();
+
+  // 1分ごとに更新（オプション - ユーザーがページを開いたままの場合）
+  setInterval(updateRelativeTimes, 60000);
+</script>
