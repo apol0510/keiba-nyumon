@@ -12,6 +12,7 @@
 
 const Anthropic = require('@anthropic-ai/sdk');
 const Airtable = require('airtable');
+const { generateAndUploadThumbnail } = require('./lib/image-generator.cjs');
 
 // Anthropic設定
 const anthropicApiKey = process.env.ANTHROPIC_API_KEY;
@@ -257,9 +258,15 @@ async function generateArticle(template, topic) {
 /**
  * ニュース記事をAirtableに保存
  */
-async function saveNewsArticle(article) {
+async function saveNewsArticle(article, thumbnailUrl = null) {
   try {
-    const record = await base('News').create(article);
+    // サムネイルURLを追加
+    const articleData = { ...article };
+    if (thumbnailUrl) {
+      articleData.ThumbnailUrl = thumbnailUrl;
+    }
+
+    const record = await base('News').create(articleData);
     console.log(`✅ 記事作成完了: ${article.Title}`);
     return record;
   } catch (error) {
@@ -303,8 +310,15 @@ async function main() {
     if (article) {
       generatedArticles.push(article);
 
+      // サムネイル画像を生成（Unsplash固定プールから選択）
+      const thumbnailUrl = await generateAndUploadThumbnail(
+        template.category,
+        article.Title,
+        null // recordIdは後で取得するため、ここではnull
+      );
+
       // Airtableに保存
-      await saveNewsArticle(article);
+      const record = await saveNewsArticle(article, thumbnailUrl);
 
       // レート制限対策（Claude APIは1分あたり50リクエスト）
       await new Promise(resolve => setTimeout(resolve, 2000)); // 2秒待機

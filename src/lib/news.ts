@@ -34,7 +34,8 @@ export interface NewsArticle {
   isFeatured: boolean;
   tags: string[];
   author?: string;
-  thumbnail?: string;
+  thumbnail?: string; // Thumbnail (Attachment) または ThumbnailUrl (Text)
+  thumbnailUrl?: string; // ThumbnailUrl (Text) - Unsplash URL用
 }
 
 /**
@@ -53,6 +54,9 @@ export interface TimelineItem {
 function recordToArticle(record: any): NewsArticle {
   const fields = record.fields;
 
+  // サムネイル画像URL取得（ThumbnailUrl優先、なければThumbnail Attachment）
+  const thumbnailUrl = fields.ThumbnailUrl || fields.Thumbnail?.[0]?.url || undefined;
+
   return {
     id: record.id,
     title: fields.Title || '',
@@ -65,7 +69,8 @@ function recordToArticle(record: any): NewsArticle {
     isFeatured: fields.IsFeatured || false,
     tags: fields.Tags || [],
     author: fields.Author,
-    thumbnail: fields.Thumbnail?.[0]?.url,
+    thumbnail: thumbnailUrl, // thumbnailとthumbnailUrlの両方に設定
+    thumbnailUrl: thumbnailUrl,
   };
 }
 

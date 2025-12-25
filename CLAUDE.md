@@ -93,13 +93,16 @@ SITE_URL=https://keiba-guide.jp
 | Excerpt | Long text | 記事要約 |
 | Category | Single select | カテゴリ（ガイド/ランキング/ハウツー） |
 | Tags | Multiple select | タグ |
-| Thumbnail | Attachment | サムネイル画像（16:9、推奨サイズ: 1200x675px） |
+| ThumbnailUrl | Single line text | サムネイル画像URL（Unsplash、16:9、1200x675px） |
+| Thumbnail | Attachment | サムネイル画像（オプション・廃止予定） |
 | Status | Single select | ステータス（published/draft） |
 | ViewCount | Number | 閲覧数 |
 | IsFeatured | Checkbox | 注目記事フラグ |
 | Author | Single line text | 著者名 |
 | PublishedAt | Date | 公開日時 |
 | CreatedAt | Created time | 作成日時 |
+
+**注意**: サムネイル画像は `ThumbnailUrl` (テキストURL) を使用します。Unsplash固定プールから自動選択されます。
 
 ---
 
