@@ -13,9 +13,9 @@ const {
   ogImage = '/og/default.png',
 } = Astro.props;
 
-const siteTitle = '競馬予想サイトニュース速報';
+const siteTitle = '競馬予想サイトガイド';
 const fullTitle = title === 'トップ' ? siteTitle : `${title} | ${siteTitle}`;
-const siteUrl = import.meta.env.SITE_URL || 'https://keiba-news.jp';
+const siteUrl = import.meta.env.SITE_URL || 'https://keiba-guide.jp';
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 ---
@@ -80,10 +80,10 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
             </div>
             <div>
               <div class="text-base md:text-xl font-bold text-gray-900">
-                競馬予想サイトニュース
+                競馬予想サイトガイド
               </div>
               <div class="hidden sm:block text-xs text-gray-500">
-                業界の最新情報
+                初心者向けガイド
               </div>
             </div>
           </a>
@@ -156,11 +156,11 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
       <div class="max-w-7xl mx-auto px-4 py-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 class="text-white font-bold text-lg mb-4">競馬予想サイトニュース速報</h3>
+            <h3 class="text-white font-bold text-lg mb-4">競馬予想サイトガイド</h3>
             <p class="text-sm text-gray-400 leading-relaxed">
-              競馬予想サイト業界の最新ニュースを毎日配信。
-              新規サイト情報、ランキング、ガイド記事など、
-              競馬予想サイト選びに役立つ情報をお届けします。
+              競馬予想サイトの選び方・使い方・攻略法を解説する初心者向けガイドサイト。
+              AI生成による高品質なハウツー記事で、
+              競馬予想サイト選びをサポートします。
             </p>
           </div>
           <div>
@@ -184,10 +184,10 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
         </div>
         <div class="border-t border-gray-700 pt-8 text-center">
           <p class="text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} 競馬予想サイトニュース速報. All rights reserved.
+            &copy; {new Date().getFullYear()} 競馬予想サイトガイド. All rights reserved.
           </p>
           <p class="text-xs text-gray-500 mt-2">
-            本サイトは競馬予想サイトに関する情報提供を目的としています。
+            本サイトは競馬予想サイトの選び方・使い方に関する情報提供を目的としています。
           </p>
         </div>
       </div>

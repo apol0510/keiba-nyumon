@@ -1,8 +1,8 @@
 import type { APIRoute } from 'astro';
 import { getLatestNews } from '../lib/news';
 
-// 固定URL（モノレポ環境での混線防止）
-const SITE_URL = 'https://keiba-news.jp';
+// サイトURL
+const SITE_URL = 'https://keiba-guide.jp';
 
 export const GET: APIRoute = async () => {
   // ニュース記事を取得（最大100件）
