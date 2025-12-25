@@ -40,29 +40,29 @@ if (CLOUDINARY_CLOUD_NAME && CLOUDINARY_API_KEY && CLOUDINARY_API_SECRET) {
  * カテゴリに応じたUnsplashキーワードを取得
  */
 function getUnsplashKeyword(category, title) {
-  // カテゴリ別のテクノロジー系キーワード
+  // カテゴリ別のキーワード（競馬・スポーツ・ビジネス系）
   const categoryKeywords = {
-    'ニュース': 'technology news digital screen',
-    'ランキング': 'data analytics dashboard chart',
-    'ガイド': 'digital learning technology education',
-    'まとめ': 'data visualization statistics',
-    '速報': 'breaking news digital alert',
-    '炎上': 'warning alert technology',
-    'G1レース': 'premium technology gold digital',
+    'ニュース': 'business workspace office desk',
+    'ランキング': 'data analytics chart statistics',
+    'ガイド': 'business meeting workspace office',
+    'まとめ': 'data visualization chart graph',
+    '速報': 'business news workspace laptop',
+    '炎上': 'business meeting serious discussion',
+    'G1レース': 'horse racing sport competition',
   };
 
   // タイトルから追加キーワードを判定
   if (title.includes('AI')) {
-    return 'artificial intelligence technology';
+    return 'business data technology workspace';
   } else if (title.includes('データ分析')) {
-    return 'data analytics technology';
+    return 'data analytics chart statistics';
   } else if (title.includes('初心者')) {
-    return 'learning technology beginner';
+    return 'business learning workspace office';
   } else if (title.includes('悪質') || title.includes('詐欺')) {
-    return 'security warning technology';
+    return 'business warning serious meeting';
   }
 
-  return categoryKeywords[category] || 'technology digital abstract';
+  return categoryKeywords[category] || 'business workspace office laptop';
 }
 
 /**
@@ -79,43 +79,43 @@ async function fetchUnsplashImage(keyword, recordId = null) {
 
     // カテゴリ別の複数画像プール（10枚以上で重複を避ける）
     const fallbackImagePools = {
-      'technology news digital screen': [
-        'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=1200&h=675&fit=crop',
+      'business workspace office desk': [
+        'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1593062096033-9a26b09da705?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1507537297725-24a1c029d3ca?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1200&h=675&fit=crop',
       ],
-      'data analytics dashboard chart': [
+      'data analytics chart statistics': [
         'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
       ],
-      'digital learning technology education': [
-        'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop',
+      'business meeting workspace office': [
+        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1556155092-490a1ba16284?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1515378960530-7c0da6231fb1?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1565688534245-05d6b5be184a?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1573497161161-c3e73707e25c?w=1200&h=675&fit=crop',
       ],
-      'data visualization statistics': [
+      'data visualization chart graph': [
         'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1200&h=675&fit=crop',
@@ -127,81 +127,81 @@ async function fetchUnsplashImage(keyword, recordId = null) {
         'https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
       ],
-      'breaking news digital alert': [
+      'business news workspace laptop': [
         'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1585776245991-cf89dd7fc73a?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1593640495253-23196b27a87f?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1484788984921-03950022c9ef?w=1200&h=675&fit=crop',
       ],
-      'warning alert technology': [
+      'business meeting serious discussion': [
         'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1556155092-490a1ba16284?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1200&h=675&fit=crop',
       ],
-      'artificial intelligence technology': [
-        'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1675557009875-4637c5f02669?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1686191128892-34817c0b13ae?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1655393001768-d946c97d6fd1?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1676299081847-824916de030a?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1655635643486-a17bc48771ff?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1676277791608-ac65a7a85a36?w=1200&h=675&fit=crop',
+      'horse racing sport competition': [
+        'https://images.unsplash.com/photo-1534438097545-a2c22c57f767?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1547347298-4074adc119b2?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=675&fit=crop',
       ],
-      'security warning technology': [
+      'business data technology workspace': [
+        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1487058792275-0ad4aaf24ca7?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1200&h=675&fit=crop',
+      ],
+      'business warning serious meeting': [
         'https://images.unsplash.com/photo-1563986768609-322da13575f3?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1614064641938-3bbee52942c7?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1556155092-490a1ba16284?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542626991-cbc4e32524cc?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1531482615713-2afd69097998?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1633265486064-086b219458ec?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1580894894513-541e068a3e2b?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1589149098258-3e9102cd63d3?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1526374965328-7f61d4dc18c5?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=1200&h=675&fit=crop',
       ],
-      'learning technology beginner': [
-        'https://images.unsplash.com/photo-1488590528505-98d2b5aba04b?w=1200&h=675&fit=crop',
+      'business learning workspace office': [
+        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1509062522246-3755977927d7?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1497032628192-86f99bcd76bc?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1515378791036-0648a3ef77b2?w=1200&h=675&fit=crop',
         'https://images.unsplash.com/photo-1524178232363-1fb2b075b655?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1531297484001-80022131f5a1?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&h=675&fit=crop',
-      ],
-      'data analytics technology': [
-        'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1504868584819-f8e8b4b6d7e3?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1518186285589-2f7649de83e0?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1543286386-713bdd548da4?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1559028012-481c04fa702d?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1509228468518-180dd4864904?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?w=1200&h=675&fit=crop',
-        'https://images.unsplash.com/photo-1516321318423-f06f85e504b3?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1531973576160-7125cd663d86?w=1200&h=675&fit=crop',
+        'https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=1200&h=675&fit=crop',
       ],
     };
 
-    const pool = fallbackImagePools[keyword] || fallbackImagePools['technology news digital screen'];
+    const pool = fallbackImagePools[keyword] || fallbackImagePools['business workspace office desk'];
 
     // recordIdをシード値として使用（なければランダム）
     if (recordId) {
