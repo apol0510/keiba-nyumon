@@ -66,7 +66,7 @@ nankan-analytics (南関東公営競馬AI予想 - 有料サービス)
 
 ---
 
-### Phase 2: Monorepo化 & keiba-data 立ち上げ（2025年2月〜3月）
+### Phase 2: Monorepo化 & keiba-data 立ち上げ（2026年1月〜2月）
 
 #### 目標
 - keiba-nyumon と keiba-data を統合してmonorepo化
@@ -94,7 +94,7 @@ keiba-guide-monorepo/
 
 ---
 
-### Phase 3: コンテンツ拡充 & SEO最適化（2025年4月〜6月）
+### Phase 3: コンテンツ拡充 & SEO最適化（2026年3月〜5月）
 
 #### keiba-nyumon
 - [ ] 記事数を100記事に拡大
@@ -111,7 +111,7 @@ keiba-guide-monorepo/
 
 ---
 
-### Phase 4: 収益化 & 自動化完成（2025年7月〜）
+### Phase 4: 収益化 & 自動化完成（2026年6月〜）
 
 #### 収益化施策
 - [ ] Google AdSense設置（両サイト）
