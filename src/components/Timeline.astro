@@ -17,8 +17,30 @@ interface Props {
 
 const { items } = Astro.props;
 
+// カテゴリスラッグからラベルへの変換
+const categoryLabels: Record<string, string> = {
+  'kiso': '基礎知識',
+  'baken': '馬券',
+  'yougo': '用語集',
+  'nankan': '南関',
+  'data': 'データ予想',
+  // 旧カテゴリとの互換性
+  '速報': '速報',
+  'ニュース': 'ニュース',
+  '炎上': '炎上',
+  'ランキング': 'ランキング',
+  'まとめ': 'まとめ',
+  'G1レース': 'G1レース'
+};
+
 // カテゴリごとのアイコン
 const categoryIcons: Record<string, string> = {
+  'kiso': '📚',
+  'baken': '🎫',
+  'yougo': '📖',
+  'nankan': '🏇',
+  'data': '📊',
+  // 旧カテゴリとの互換性
   '速報': '🔥',
   'ニュース': '📰',
   '炎上': '💥',
@@ -29,6 +51,12 @@ const categoryIcons: Record<string, string> = {
 
 // カテゴリごとのカラー
 const categoryColors: Record<string, string> = {
+  'kiso': 'text-blue-500',
+  'baken': 'text-green-500',
+  'yougo': 'text-purple-500',
+  'nankan': 'text-orange-500',
+  'data': 'text-cyan-500',
+  // 旧カテゴリとの互換性
   '速報': 'text-red-500',
   'ニュース': 'text-blue-500',
   '炎上': 'text-orange-600',
@@ -47,13 +75,14 @@ const categoryColors: Record<string, string> = {
     {items.map(item => {
       const icon = categoryIcons[item.category] || '📰';
       const color = categoryColors[item.category] || 'text-gray-500';
+      const label = categoryLabels[item.category] || item.category;
 
       return (
         <div class="timeline-item">
           <span class="timeline-time">{item.time}</span>
           <span class={`timeline-icon ${color}`}>{icon}</span>
           <a href={`/news/${item.slug}/`} class="timeline-link">
-            <span class="timeline-category">[{item.category}]</span>
+            <span class="timeline-category">{label}</span>
             <span class="timeline-title">{item.title}</span>
           </a>
         </div>

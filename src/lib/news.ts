@@ -249,7 +249,10 @@ export async function getTimelineItems(limit: number = 6): Promise<TimelineItem[
       const hours = Math.floor(diff / (1000 * 60 * 60));
 
       let timeStr = '';
-      if (hours < 1) {
+      // マイナス時刻の場合は「たった今」と表示
+      if (diff < 0 || minutes < 1) {
+        timeStr = 'たった今';
+      } else if (hours < 1) {
         timeStr = `${minutes}分前`;
       } else if (hours < 24) {
         timeStr = `${hours}時間前`;
