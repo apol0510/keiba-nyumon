@@ -78,8 +78,8 @@ npm run dev
 
 ```bash
 # Airtable（必須）
-KEIBA_GUIDE_AIRTABLE_API_KEY=your_airtable_pat
-KEIBA_GUIDE_AIRTABLE_BASE_ID=appiHsDBAFFSmCiBV
+KEIBA_NYUMON_AIRTABLE_API_KEY=your_airtable_pat
+KEIBA_NYUMON_AIRTABLE_BASE_ID=appiHsDBAFFSmCiBV
 
 # Claude API（記事生成時に必須）
 ANTHROPIC_API_KEY=your_claude_api_key
@@ -165,8 +165,8 @@ keiba-nyumon/
 2. **環境変数を設定**
    - Site settings → Environment variables
    - 以下の変数を追加:
-     - `KEIBA_GUIDE_AIRTABLE_API_KEY`
-     - `KEIBA_GUIDE_AIRTABLE_BASE_ID`
+     - `KEIBA_NYUMON_AIRTABLE_API_KEY`
+     - `KEIBA_NYUMON_AIRTABLE_BASE_ID`
      - `ANTHROPIC_API_KEY`
 
 3. **カスタムドメインを設定**

@@ -6,8 +6,8 @@
 const Airtable = require('airtable');
 const { generateAndUploadThumbnail } = require('./lib/image-generator.cjs');
 
-const AIRTABLE_API_KEY = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-const AIRTABLE_BASE_ID = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
+const AIRTABLE_API_KEY = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+const AIRTABLE_BASE_ID = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
 if (!AIRTABLE_API_KEY || !AIRTABLE_BASE_ID) {
   console.error('❌ Error: AIRTABLE_API_KEY or AIRTABLE_BASE_ID not set');

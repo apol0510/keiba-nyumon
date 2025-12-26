@@ -160,8 +160,8 @@ ARTICLE_COUNT=12 node scripts/generate-ai-news.cjs
 
 ```bash
 # Airtable（必須）
-KEIBA_GUIDE_AIRTABLE_API_KEY=patXXXXXXXXXXXXXXXX
-KEIBA_GUIDE_AIRTABLE_BASE_ID=appiHsDBAFFSmCiBV  # keiba-nyumon専用ベース（News）
+KEIBA_NYUMON_AIRTABLE_API_KEY=patXXXXXXXXXXXXXXXX
+KEIBA_NYUMON_AIRTABLE_BASE_ID=appiHsDBAFFSmCiBV  # keiba-nyumon専用ベース（News）
 
 # フォールバック（開発環境用）
 AIRTABLE_API_KEY=patXXXXXXXXXXXXXXXX
@@ -314,8 +314,8 @@ Netlify Dashboard → Site settings → Environment variables
 
 | Key | Value |
 |-----|------|
-| `KEIBA_GUIDE_AIRTABLE_API_KEY` | Airtable Personal Access Token |
-| `KEIBA_GUIDE_AIRTABLE_BASE_ID` | `appiHsDBAFFSmCiBV` |
+| `KEIBA_NYUMON_AIRTABLE_API_KEY` | Airtable Personal Access Token |
+| `KEIBA_NYUMON_AIRTABLE_BASE_ID` | `appiHsDBAFFSmCiBV` |
 | `ANTHROPIC_API_KEY` | Claude APIキー（記事生成用） |
 
 ### 3. ドメイン設定
@@ -356,8 +356,8 @@ npm run build
 2. Base IDが正しいか確認: `appiHsDBAFFSmCiBV`
 3. Airtable APIキーの権限を確認
 4. 環境変数名が正しいか確認:
-   - `KEIBA_GUIDE_AIRTABLE_API_KEY`
-   - `KEIBA_GUIDE_AIRTABLE_BASE_ID`
+   - `KEIBA_NYUMON_AIRTABLE_API_KEY`
+   - `KEIBA_NYUMON_AIRTABLE_BASE_ID`
 
 ### 記事の日付が正しく表示されない
 

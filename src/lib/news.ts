@@ -12,7 +12,7 @@ let base: ReturnType<ReturnType<typeof Airtable>['base']> | null = null;
 function getBase() {
   if (!base && typeof window === 'undefined') {
     if (!config.airtable.apiKey || !config.airtable.baseId) {
-      throw new Error('Airtable credentials not configured. Check KEIBA_GUIDE_AIRTABLE_API_KEY and KEIBA_GUIDE_AIRTABLE_BASE_ID.');
+      throw new Error('Airtable credentials not configured. Check KEIBA_NYUMON_AIRTABLE_API_KEY and KEIBA_NYUMON_AIRTABLE_BASE_ID.');
     }
     base = new Airtable({ apiKey: config.airtable.apiKey }).base(config.airtable.baseId);
   }

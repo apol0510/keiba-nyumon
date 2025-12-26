@@ -1,14 +1,14 @@
 const Airtable = require('airtable');
 
-const KEIBA_GUIDE_AIRTABLE_API_KEY = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-const KEIBA_GUIDE_AIRTABLE_BASE_ID = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
+const KEIBA_NYUMON_AIRTABLE_API_KEY = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+const KEIBA_NYUMON_AIRTABLE_BASE_ID = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
-if (!KEIBA_GUIDE_AIRTABLE_API_KEY || !KEIBA_GUIDE_AIRTABLE_BASE_ID) {
+if (!KEIBA_NYUMON_AIRTABLE_API_KEY || !KEIBA_NYUMON_AIRTABLE_BASE_ID) {
   console.error('❌ API credentials not set');
   process.exit(1);
 }
 
-const base = new Airtable({ apiKey: KEIBA_GUIDE_AIRTABLE_API_KEY }).base(KEIBA_GUIDE_AIRTABLE_BASE_ID);
+const base = new Airtable({ apiKey: KEIBA_NYUMON_AIRTABLE_API_KEY }).base(KEIBA_NYUMON_AIRTABLE_BASE_ID);
 
 base('News').select({
   filterByFormula: '{Status} = "published"',

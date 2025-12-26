@@ -25,8 +25,8 @@ if (anthropicApiKey) {
 }
 
 // Airtable設定
-const airtableApiKey = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-const baseId = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV';
+const airtableApiKey = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+const baseId = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV';
 
 let base;
 if (airtableApiKey) {
@@ -430,7 +430,7 @@ async function main() {
   }
 
   if (!airtableApiKey) {
-    console.error('❌ KEIBA_GUIDE_AIRTABLE_API_KEY または AIRTABLE_API_KEY が設定されていません');
+    console.error('❌ KEIBA_NYUMON_AIRTABLE_API_KEY または AIRTABLE_API_KEY が設定されていません');
     process.exit(1);
   }
 

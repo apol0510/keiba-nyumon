@@ -1,5 +1,5 @@
 const Airtable = require('airtable');
-const base = new Airtable({ apiKey: process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY }).base(process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID);
+const base = new Airtable({ apiKey: process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY }).base(process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID);
 
 async function main() {
   console.log('\n🔍 本日投稿された口コミを確認中...\n');

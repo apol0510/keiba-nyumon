@@ -5,8 +5,8 @@ import Airtable from 'airtable';
 let _base: ReturnType<ReturnType<typeof Airtable>['base']> | null = null;
 function getBase() {
   if (!_base) {
-    const apiKey = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-    const baseId = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
+    const apiKey = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+    const baseId = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
     if (!apiKey || !baseId) {
       throw new Error('Airtable credentials not configured');
     }

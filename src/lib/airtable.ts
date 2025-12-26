@@ -3,14 +3,14 @@ import Airtable from 'airtable';
 // Airtable設定（遅延評価でクライアントサイドエラーを回避）
 function getAirtableCredentials() {
   // Netlifyではprocess.envのみ使用（import.meta.envはAstro設定が必要）
-  const AIRTABLE_API_KEY = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-  const AIRTABLE_BASE_ID = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
+  const AIRTABLE_API_KEY = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+  const AIRTABLE_BASE_ID = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
   // デバッグ用ログ（ビルド時のみ）
   if (typeof window === 'undefined') {
     console.log('🔍 Environment variables check:');
-    console.log('  process.env.KEIBA_GUIDE_AIRTABLE_API_KEY:', process.env.KEIBA_GUIDE_AIRTABLE_API_KEY ? 'SET' : 'NOT SET');
-    console.log('  process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID:', process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID ? 'SET' : 'NOT SET');
+    console.log('  process.env.KEIBA_NYUMON_AIRTABLE_API_KEY:', process.env.KEIBA_NYUMON_AIRTABLE_API_KEY ? 'SET' : 'NOT SET');
+    console.log('  process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID:', process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID ? 'SET' : 'NOT SET');
     console.log('  process.env.AIRTABLE_API_KEY:', process.env.AIRTABLE_API_KEY ? 'SET (fallback)' : 'NOT SET');
     console.log('  process.env.AIRTABLE_BASE_ID:', process.env.AIRTABLE_BASE_ID ? 'SET (fallback)' : 'NOT SET');
     console.log('  Final API_KEY:', AIRTABLE_API_KEY ? `SET (${AIRTABLE_API_KEY.substring(0, 10)}...)` : 'NOT SET');
@@ -51,7 +51,7 @@ function getBase() {
 function base(tableName: string) {
   const currentBase = getBase();
   if (!currentBase) {
-    throw new Error('Airtable not initialized. Check KEIBA_GUIDE_AIRTABLE_API_KEY and KEIBA_GUIDE_AIRTABLE_BASE_ID environment variables.');
+    throw new Error('Airtable not initialized. Check KEIBA_NYUMON_AIRTABLE_API_KEY and KEIBA_NYUMON_AIRTABLE_BASE_ID environment variables.');
   }
   return currentBase(tableName);
 }

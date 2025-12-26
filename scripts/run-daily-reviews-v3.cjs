@@ -14,8 +14,8 @@ const fs = require('fs');
 const path = require('path');
 
 // Airtable設定
-const apiKey = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-const baseId = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
+const apiKey = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+const baseId = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
 if (!apiKey || !baseId) {
   console.error('❌ AIRTABLE_API_KEY and AIRTABLE_BASE_ID must be set');

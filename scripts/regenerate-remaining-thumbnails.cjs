@@ -7,15 +7,15 @@ require('dotenv').config();
 const Airtable = require('airtable');
 const { generateAndUploadThumbnail } = require('./lib/image-generator.cjs');
 
-const KEIBA_GUIDE_AIRTABLE_API_KEY = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-const KEIBA_GUIDE_AIRTABLE_BASE_ID = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
+const KEIBA_NYUMON_AIRTABLE_API_KEY = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+const KEIBA_NYUMON_AIRTABLE_BASE_ID = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
-if (!KEIBA_GUIDE_AIRTABLE_API_KEY || !KEIBA_GUIDE_AIRTABLE_BASE_ID) {
-  console.error('❌ KEIBA_GUIDE_AIRTABLE_API_KEY と KEIBA_GUIDE_AIRTABLE_BASE_ID を設定してください');
+if (!KEIBA_NYUMON_AIRTABLE_API_KEY || !KEIBA_NYUMON_AIRTABLE_BASE_ID) {
+  console.error('❌ KEIBA_NYUMON_AIRTABLE_API_KEY と KEIBA_NYUMON_AIRTABLE_BASE_ID を設定してください');
   process.exit(1);
 }
 
-const base = new Airtable({ apiKey: KEIBA_GUIDE_AIRTABLE_API_KEY }).base(KEIBA_GUIDE_AIRTABLE_BASE_ID);
+const base = new Airtable({ apiKey: KEIBA_NYUMON_AIRTABLE_API_KEY }).base(KEIBA_NYUMON_AIRTABLE_BASE_ID);
 
 // カテゴリを判定（タイトルから推測）
 function detectCategory(title) {

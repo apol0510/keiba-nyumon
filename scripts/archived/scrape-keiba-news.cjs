@@ -15,11 +15,11 @@ const puppeteer = require('puppeteer');
 const Airtable = require('airtable');
 
 // Airtable設定（KEIBA_GUIDE_*を優先、フォールバックでAIRTABLE_*）
-const apiKey = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
-const baseId = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV';
+const apiKey = process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
+const baseId = process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV';
 
 if (!apiKey) {
-  console.error('❌ KEIBA_GUIDE_AIRTABLE_API_KEY or AIRTABLE_API_KEY must be set');
+  console.error('❌ KEIBA_NYUMON_AIRTABLE_API_KEY or AIRTABLE_API_KEY must be set');
   process.exit(1);
 }
 
