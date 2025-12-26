@@ -8,6 +8,23 @@
 
 **プロジェクトタイプ**: 独立プロジェクト（モノレポではない）
 
+## ⚠️ 重要：デプロイに関する注意事項
+
+**絶対に守ること**：
+1. **Netlifyサイト未作成**: keiba-guide用の新しいNetlifyサイトをまだ作成していません
+2. **デプロイ禁止**: `netlify deploy`コマンドを実行しないでください
+3. **keiba-reviewと混同しない**: 同じワークスペースにkeiba-reviewプロジェクトがあります
+4. **サイト作成手順**:
+   - Netlify Dashboardから手動で新しいサイトを作成
+   - サイト名: keiba-guide または類似の名前
+   - ドメイン: 後で設定（keiba-guide.jp or keiba-guide.netlify.app）
+   - サイトID取得後、`.netlify/state.json`を更新
+
+**過去のインシデント（2025-12-26）**：
+- 誤ってkeiba-reviewのサイトにkeiba-guideをデプロイしてしまった
+- 両プロジェクトが同じNetlify siteIdを共有していたことが原因
+- keiba-reviewは手動でロールバックして復元済み
+
 ---
 
 ## プロジェクト概要
