@@ -1,10 +1,10 @@
-# https://keiba-guide.jp/robots.txt
+# https://keiba-nyumon.jp/robots.txt
 
 User-agent: *
 Allow: /
 
 # サイトマップ
-Sitemap: https://keiba-guide.jp/sitemap.xml
+Sitemap: https://keiba-nyumon.jp/sitemap.xml
 
 # クロール速度調整（Googlebotなど）
 Crawl-delay: 1

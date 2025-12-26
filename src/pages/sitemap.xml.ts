@@ -2,7 +2,7 @@ import type { APIRoute } from 'astro';
 import { getLatestNews } from '../lib/news';
 
 // サイトURL
-const SITE_URL = 'https://keiba-guide.jp';
+const SITE_URL = 'https://keiba-nyumon.jp';
 
 export const GET: APIRoute = async () => {
   // ニュース記事を取得（最大100件）
