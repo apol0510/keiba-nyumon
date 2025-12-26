@@ -1,5 +1,5 @@
 [build]
-  # keiba-guide（独立プロジェクト）
+  # keiba-nyumon（独立プロジェクト）
   base = "."
   command = "npm install && npm run build"
   publish = "dist"

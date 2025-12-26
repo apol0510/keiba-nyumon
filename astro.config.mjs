@@ -12,7 +12,7 @@ const env = loadEnv('', process.cwd(), '');
 export default defineConfig({
   site: 'https://keiba-news.jp',
   server: {
-    port: 4322, // keiba-guideは4322ポートで起動
+    port: 4322, // keiba-nyumonは4322ポートで起動
   },
   integrations: [react()],
   output: 'static', // 完全静的生成（Airtableから事前生成）
@@ -20,8 +20,8 @@ export default defineConfig({
     plugins: [tailwindcss()],
     // 環境変数をViteに明示的に渡す（.envファイルから読み込んだ値を使用）
     define: {
-      'process.env.KEIBA_GUIDE_AIRTABLE_API_KEY': JSON.stringify(env.KEIBA_GUIDE_AIRTABLE_API_KEY || env.AIRTABLE_API_KEY || ''),
-      'process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID': JSON.stringify(env.KEIBA_GUIDE_AIRTABLE_BASE_ID || env.AIRTABLE_BASE_ID || ''),
+      'process.env.KEIBA_NYUMON_AIRTABLE_API_KEY': JSON.stringify(env.KEIBA_NYUMON_AIRTABLE_API_KEY || env.AIRTABLE_API_KEY || ''),
+      'process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID': JSON.stringify(env.KEIBA_NYUMON_AIRTABLE_BASE_ID || env.AIRTABLE_BASE_ID || ''),
       'process.env.AIRTABLE_API_KEY': JSON.stringify(env.AIRTABLE_API_KEY || ''),
       'process.env.AIRTABLE_BASE_ID': JSON.stringify(env.AIRTABLE_BASE_ID || ''),
     },
