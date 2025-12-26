@@ -1,5 +1,5 @@
 /**
- * 競馬予想サイト初心者ガイド - サイト設定
+ * 競馬入門ガイド - サイト設定
  */
 
 export interface SiteConfig {
@@ -20,16 +20,18 @@ export interface SiteConfig {
 
 export const config: SiteConfig = {
   // サイト基本情報
-  name: '競馬予想サイト初心者ガイド',
-  domain: 'keiba-guide.jp',
-  projectName: 'keiba-guide',
+  name: '競馬入門ガイド',
+  domain: 'keiba-nyumon.jp',
+  projectName: 'keiba-nyumon',
 
   // カテゴリ設定
-  categories: ['nankan', 'chuo', 'chihou'] as const,
+  categories: ['kiso', 'baken', 'yougo', 'nankan', 'data'] as const,
   categoryLabels: {
-    nankan: '南関競馬',
-    chuo: '中央競馬',
-    chihou: '地方競馬',
+    kiso: '競馬の基礎知識',
+    baken: '馬券の買い方',
+    yougo: '競馬用語集',
+    nankan: '南関競馬入門',
+    data: 'データ予想入門',
   },
 
   // テーマカラー

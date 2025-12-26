@@ -1,8 +1,8 @@
 {
-  "name": "keiba-guide",
+  "name": "keiba-nyumon",
   "type": "module",
   "version": "1.0.0",
-  "description": "競馬予想サイト初心者向けガイド - 選び方・使い方・攻略法",
+  "description": "競馬入門ガイド - 初心者のための基礎知識",
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
