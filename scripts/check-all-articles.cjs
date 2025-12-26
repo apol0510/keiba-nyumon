@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
- * Airtable全記事確認スクリプト
+ * 全記事の状況を確認するスクリプト
  */
 
 const Airtable = require('airtable');
 
-// 環境変数から取得
 const AIRTABLE_API_KEY = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
@@ -18,50 +17,67 @@ const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
 async function checkAllArticles() {
   try {
-    console.log('📰 全記事を確認中...\n');
+    console.log('📊 記事の状況を確認中...\n');
 
     const records = await base('News')
       .select({
-        sort: [{ field: 'PublishedAt', direction: 'desc' }],
-        filterByFormula: '{Status} = "published"',
+        filterByFormula: '{Status} = "published"'
       })
       .all();
 
-    console.log(`合計: ${records.length}件\n`);
+    console.log(`✅ 公開済み記事: ${records.length}件\n`);
 
-    // Title61, 62, 63を探す
-    const targetTitles = records.filter(r =>
-      r.fields.Title && (
-        r.fields.Title.includes('61') ||
-        r.fields.Title.includes('62') ||
-        r.fields.Title.includes('63') ||
-        r.fields.Title.match(/Title\s*6[123]/)
-      )
-    );
-
-    if (targetTitles.length > 0) {
-      console.log('🎯 Title61/62/63を含む記事:\n');
-      targetTitles.forEach((record) => {
-        const fields = record.fields;
-        console.log(`タイトル: ${fields.Title}`);
-        console.log(`RecordID: ${record.id}`);
-        console.log(`PublishedAt: ${fields.PublishedAt}`);
-        console.log(`Status: ${fields.Status}`);
-        console.log('');
-      });
-    } else {
-      console.log('⚠️  Title61/62/63を含む記事は見つかりませんでした\n');
-    }
-
-    // 最新10件を表示
-    console.log('📋 最新10件:\n');
-    records.slice(0, 10).forEach((record, index) => {
-      const fields = record.fields;
-      console.log(`${index + 1}. ${fields.Title}`);
-      console.log(`   PublishedAt: ${fields.PublishedAt}`);
-      console.log(`   Status: ${fields.Status}`);
-      console.log('');
+    const categoryCount = {};
+    records.forEach(record => {
+      const category = record.fields.Category || 'uncategorized';
+      categoryCount[category] = (categoryCount[category] || 0) + 1;
     });
+
+    console.log('📁 カテゴリ別記事数:');
+    console.log('─'.repeat(40));
+    Object.entries(categoryCount).sort((a, b) => b[1] - a[1]).forEach(([category, count]) => {
+      const label = {
+        'kiso': '競馬の基礎知識',
+        'baken': '馬券の買い方',
+        'yougo': '競馬用語集',
+        'nankan': '南関競馬入門',
+        'data': 'データ予想入門'
+      }[category] || category;
+      console.log(`  ${category.padEnd(15)} (${label}): ${count}件`);
+    });
+
+    console.log('\n📈 Phase 1 目標: 各カテゴリ12記事（合計60記事）');
+    console.log('─'.repeat(40));
+    const targetCategories = ['kiso', 'baken', 'yougo', 'nankan', 'data'];
+    targetCategories.forEach(cat => {
+      const count = categoryCount[cat] || 0;
+      const status = count >= 12 ? '✅' : '⚠️';
+      const label = {
+        'kiso': '競馬の基礎知識',
+        'baken': '馬券の買い方',
+        'yougo': '競馬用語集',
+        'nankan': '南関競馬入門',
+        'data': 'データ予想入門'
+      }[cat];
+      console.log(`  ${status} ${cat.padEnd(10)} (${label}): ${count}/12件`);
+    });
+
+    console.log('\n🔍 データ品質チェック:');
+    console.log('─'.repeat(40));
+
+    let noThumbnail = 0;
+    let noPublishedAt = 0;
+    let noViewCount = 0;
+
+    records.forEach(record => {
+      if (!record.fields.ThumbnailUrl) noThumbnail++;
+      if (!record.fields.PublishedAt) noPublishedAt++;
+      if (record.fields.ViewCount === undefined || record.fields.ViewCount === null) noViewCount++;
+    });
+
+    console.log(`  サムネイル未設定: ${noThumbnail}件 ${noThumbnail === 0 ? '✅' : '⚠️'}`);
+    console.log(`  公開日時未設定: ${noPublishedAt}件 ${noPublishedAt === 0 ? '✅' : '⚠️'}`);
+    console.log(`  閲覧数未設定: ${noViewCount}件 ${noViewCount === 0 ? '✅' : '⚠️'}`);
 
   } catch (error) {
     console.error('❌ Error:', error.message);

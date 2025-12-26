@@ -1,11 +1,10 @@
 #!/usr/bin/env node
 /**
- * Airtable記事のサムネイル確認スクリプト
+ * サムネイル未設定の記事を確認するスクリプト
  */
 
 const Airtable = require('airtable');
 
-// 環境変数から取得
 const AIRTABLE_API_KEY = process.env.KEIBA_GUIDE_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY;
 const AIRTABLE_BASE_ID = process.env.KEIBA_GUIDE_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID;
 
@@ -18,28 +17,20 @@ const base = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(AIRTABLE_BASE_ID);
 
 async function checkThumbnails() {
   try {
-    console.log('📰 最新記事のサムネイル確認中...\n');
+    console.log('🖼️  サムネイル未設定の記事を確認中...\n');
 
     const records = await base('News')
       .select({
-        maxRecords: 5,
-        sort: [{ field: 'PublishedAt', direction: 'desc' }],
-        filterByFormula: '{Status} = "published"',
+        filterByFormula: 'AND({Status} = "published", {ThumbnailUrl} = "")'
       })
       .all();
 
-    records.forEach((record, index) => {
-      const fields = record.fields;
-      const thumbnail = fields.Thumbnail;
-      const thumbnailUrl = fields.ThumbnailUrl;
+    console.log(`合計: ${records.length}件\n`);
 
-      console.log(`${index + 1}. ${fields.Title}`);
-      console.log(`   RecordID: ${record.id}`);
-      console.log(`   PublishedAt: ${fields.PublishedAt}`);
-      console.log(`   Category: ${fields.Category}`);
-      console.log(`   Thumbnail (Attachment): ${thumbnail ? thumbnail[0]?.url : 'なし'}`);
-      console.log(`   ThumbnailUrl (Text): ${thumbnailUrl || 'なし'}`);
-      console.log('');
+    records.forEach((record, index) => {
+      console.log(`${index + 1}. ${record.fields.Title}`);
+      console.log(`   Category: ${record.fields.Category || 'uncategorized'}`);
+      console.log(`   RecordID: ${record.id}\n`);
     });
 
   } catch (error) {
