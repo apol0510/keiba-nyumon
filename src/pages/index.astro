@@ -28,14 +28,14 @@ try {
   timelineItems = [];
 }
 
-// 構造化データ（NewsArticleスキーマ）
-const siteUrl = config.domain ? `https://${config.domain}` : 'https://keiba-news.jp';
+// 構造化データ（WebSiteスキーマ）
+const siteUrl = config.domain ? `https://${config.domain}` : 'https://keiba-nyumon.jp';
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'WebSite',
   name: config.name,
   url: siteUrl,
-  description: '競馬予想サイト業界の最新ニュース・炎上・まとめ情報をいち早くお届け。2ch/5ch風のリアルな声で、詐欺サイトを見抜く。',
+  description: '競馬初心者のための入門ガイド。競馬の始め方、馬券の買い方、用語解説、南関競馬、データ予想の基礎知識をわかりやすく解説。',
   inLanguage: 'ja-JP',
   publisher: {
     '@type': 'Organization',
@@ -46,8 +46,8 @@ const structuredData = {
 ---
 
 <BaseLayout
-  title={`${config.name} - 業界の最新情報をいち早くお届け`}
-  description="競馬予想サイト業界の最新ニュース・炎上・まとめ情報。詐欺サイトの見分け方、ランキング、G1レース予想など、毎日更新！"
+  title={`${config.name} - 初心者のための競馬基礎知識`}
+  description="競馬初心者のための入門ガイド。競馬の始め方、馬券の買い方、用語解説、南関競馬、データ予想の基礎知識をわかりやすく解説します。"
 >
   <!-- 構造化データ -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
@@ -55,12 +55,12 @@ const structuredData = {
   <!-- ヒーローセクション -->
   <section class="hero">
     <div class="hero-content">
-      <div class="hero-label">NEWS</div>
+      <div class="hero-label">競馬入門</div>
       <h1 class="hero-title">
-        競馬予想サイト業界の<br class="md:hidden">最新ニュース
+        初心者のための<br class="md:hidden">競馬基礎知識
       </h1>
       <p class="hero-description">
-        新規サイト情報・ランキング・ガイド記事を毎日配信
+        競馬の始め方から馬券の買い方まで、わかりやすく解説
       </p>
     </div>
   </section>
@@ -68,10 +68,10 @@ const structuredData = {
   <!-- メインコンテンツ -->
   <div class="container">
     <div class="content-grid">
-      <!-- 左カラム: ニュース一覧 -->
+      <!-- 左カラム: 記事一覧 -->
       <main class="main-column">
         <div class="section-header">
-          <h2 class="section-title">📰 最新ニュース</h2>
+          <h2 class="section-title">📚 入門記事一覧</h2>
         </div>
 
         <div class="news-grid">
@@ -113,11 +113,11 @@ const structuredData = {
         <div class="category-section">
           <h3 class="sidebar-title">📂 カテゴリ</h3>
           <div class="category-list">
-            <div class="category-item">🔥 速報</div>
-            <div class="category-item">💥 炎上</div>
-            <div class="category-item">📊 ランキング</div>
-            <div class="category-item">📝 まとめ</div>
-            <div class="category-item">🏇 G1レース</div>
+            <div class="category-item">📚 競馬の基礎知識</div>
+            <div class="category-item">🎫 馬券の買い方</div>
+            <div class="category-item">📖 競馬用語集</div>
+            <div class="category-item">🏇 南関競馬入門</div>
+            <div class="category-item">📊 データ予想入門</div>
           </div>
         </div>
       </aside>

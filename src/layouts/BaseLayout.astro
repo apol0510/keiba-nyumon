@@ -9,13 +9,13 @@ interface Props {
 
 const {
   title,
-  description = '競馬予想サイト業界の最新ニュース・ランキング・ガイド情報を毎日配信。新規サイト情報や業界動向をいち早くお届けします。',
+  description = '競馬初心者のための入門ガイド。競馬の始め方、馬券の買い方、用語解説、南関競馬、データ予想の基礎知識をわかりやすく解説します。',
   ogImage = '/og/default.png',
 } = Astro.props;
 
-const siteTitle = '競馬予想サイトガイド';
+const siteTitle = '競馬入門ガイド';
 const fullTitle = title === 'トップ' ? siteTitle : `${title} | ${siteTitle}`;
-const siteUrl = import.meta.env.SITE_URL || 'https://keiba-guide.jp';
+const siteUrl = import.meta.env.SITE_URL || 'https://keiba-nyumon.jp';
 const canonicalUrl = new URL(Astro.url.pathname, siteUrl);
 const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`;
 ---
@@ -80,10 +80,10 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
             </div>
             <div>
               <div class="text-base md:text-xl font-bold text-gray-900">
-                競馬予想サイトガイド
+                競馬入門ガイド
               </div>
               <div class="hidden sm:block text-xs text-gray-500">
-                初心者向けガイド
+                初心者のための基礎知識
               </div>
             </div>
           </a>
@@ -156,20 +156,21 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
       <div class="max-w-7xl mx-auto px-4 py-12">
         <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
           <div>
-            <h3 class="text-white font-bold text-lg mb-4">競馬予想サイトガイド</h3>
+            <h3 class="text-white font-bold text-lg mb-4">競馬入門ガイド</h3>
             <p class="text-sm text-gray-400 leading-relaxed">
-              競馬予想サイトの選び方・使い方・攻略法を解説する初心者向けガイドサイト。
-              AI生成による高品質なハウツー記事で、
-              競馬予想サイト選びをサポートします。
+              競馬初心者のための入門サイト。
+              競馬の始め方、馬券の買い方、用語解説、南関競馬、データ予想の基礎知識を
+              わかりやすく解説します。
             </p>
           </div>
           <div>
             <h3 class="text-white font-bold text-lg mb-4">カテゴリ</h3>
             <ul class="space-y-2 text-sm">
-              <li>📰 ニュース</li>
-              <li>📊 ランキング</li>
-              <li>📘 ガイド</li>
-              <li>📝 まとめ</li>
+              <li>📚 競馬の基礎知識</li>
+              <li>🎫 馬券の買い方</li>
+              <li>📖 競馬用語集</li>
+              <li>🏇 南関競馬入門</li>
+              <li>📊 データ予想入門</li>
             </ul>
           </div>
           <div>
@@ -184,10 +185,10 @@ const ogImageUrl = ogImage.startsWith('http') ? ogImage : `${siteUrl}${ogImage}`
         </div>
         <div class="border-t border-gray-700 pt-8 text-center">
           <p class="text-sm text-gray-400">
-            &copy; {new Date().getFullYear()} 競馬予想サイトガイド. All rights reserved.
+            &copy; {new Date().getFullYear()} 競馬入門ガイド. All rights reserved.
           </p>
           <p class="text-xs text-gray-500 mt-2">
-            本サイトは競馬予想サイトの選び方・使い方に関する情報提供を目的としています。
+            本サイトは競馬初心者向けの基礎知識・入門情報の提供を目的としています。
           </p>
         </div>
       </div>
