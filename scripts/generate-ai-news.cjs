@@ -378,6 +378,9 @@ async function generateArticle(template) {
     const now = new Date();
     const publishedAt = new Date(now.getTime() + (9 * 60 * 60 * 1000)).toISOString(); // JST = UTC+9
 
+    // 初期閲覧数を設定（新規記事なので27-100の範囲）
+    const initialViewCount = Math.floor(Math.random() * (100 - 27 + 1)) + 27;
+
     return {
       Title: template.title,
       Slug: generateSlug(template.title),
@@ -386,6 +389,7 @@ async function generateArticle(template) {
       Excerpt: excerpt,
       Content: content.trim(),
       PublishedAt: publishedAt,
+      ViewCount: initialViewCount,
       Status: 'published',
       IsFeatured: Math.random() < 0.3, // 30%の確率で注目記事
       Author: '競馬入門編集部'
