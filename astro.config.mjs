@@ -5,11 +5,10 @@ import { defineConfig } from 'astro/config';
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
-// 環境変数を読み込み（.envファイルまたはprocess.env）
-// Netlifyではprocess.envから、ローカルでは.envファイルから読み込む
-const env = typeof process !== 'undefined' && process.env
-  ? process.env
-  : loadEnv('', process.cwd(), '');
+// 環境変数を読み込み（.envファイルとprocess.envをマージ）
+// ローカル: .envファイルから読み込み
+// Netlify: process.envの値で上書き（Netlifyの環境変数が優先）
+const env = { ...loadEnv('', process.cwd(), ''), ...process.env };
 
 // https://astro.build/config
 export default defineConfig({
