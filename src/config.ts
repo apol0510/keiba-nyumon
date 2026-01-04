@@ -41,10 +41,10 @@ export const config: SiteConfig = {
   },
 
   // Airtable設定（モノレポ対応：プロジェクト固有の環境変数名を優先）
-  // Netlifyではprocess.envのみ使用（import.meta.envはAstro設定が必要）
+  // Astroの標準: import.meta.envを使用（ビルド時に環境変数が展開される）
   airtable: {
-    baseId: process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV',
-    apiKey: process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY || '',
+    baseId: import.meta.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || import.meta.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV',
+    apiKey: import.meta.env.KEIBA_NYUMON_AIRTABLE_API_KEY || import.meta.env.AIRTABLE_API_KEY || '',
   },
 };
 
