@@ -1,0 +1,45 @@
+name: Trigger Netlify Build (Simple Method)
+
+on:
+  # 毎日午前6時（JST）に実行
+  schedule:
+    - cron: '0 21 * * *' # UTC 21:00 = JST 6:00AM
+  # 手動トリガー
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'ビルドトリガー理由'
+        required: false
+        default: 'Manual trigger'
+        type: string
+
+jobs:
+  trigger-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+
+    steps:
+      - name: Trigger Netlify Build via Build Hook
+        run: |
+          echo "🚀 Netlifyビルドをトリガー中..."
+          echo "理由: ${{ github.event.inputs.reason || 'Scheduled trigger' }}"
+
+          # Build Hookを呼び出し
+          curl -X POST -d '{}' ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+
+          echo "✅ ビルドリクエストを送信しました"
+          echo "🌐 デプロイ状況: https://app.netlify.com/projects/keiba-nyumon/deploys"
+
+      - name: Wait and verify
+        run: |
+          echo "⏳ Netlifyでビルド中..."
+          echo "📋 数分後にサイトを確認してください: https://keiba-nyumon.netlify.app"
+
+      - name: Summary
+        run: |
+          echo "### 📊 デプロイサマリー" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Netlifyビルドをトリガーしました" >> $GITHUB_STEP_SUMMARY
+          echo "- 🌐 サイト: https://keiba-nyumon.netlify.app" >> $GITHUB_STEP_SUMMARY
+          echo "- 📅 実行日時: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "- 📋 デプロイログ: https://app.netlify.com/projects/keiba-nyumon/deploys" >> $GITHUB_STEP_SUMMARY

@@ -1,0 +1,64 @@
+name: Auto Deploy to Netlify
+
+on:
+  # 記事がAirtableに追加されたときに手動トリガー、または毎日午前6時（JST）に実行
+  schedule:
+    - cron: '0 21 * * *' # 毎日UTC 21:00（JST 6:00AM）
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'デプロイ理由'
+        required: false
+        default: 'Manual trigger'
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build site
+        env:
+          KEIBA_NYUMON_AIRTABLE_API_KEY: ${{ secrets.KEIBA_NYUMON_AIRTABLE_API_KEY }}
+          KEIBA_NYUMON_AIRTABLE_BASE_ID: ${{ secrets.KEIBA_NYUMON_AIRTABLE_BASE_ID }}
+          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
+          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
+        run: npm run build
+
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-deploy: true
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          deploy-message: "Auto deploy: ${{ github.event.inputs.reason || 'Scheduled deployment' }}"
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
+
+      - name: Summary
+        if: success()
+        run: |
+          echo "✅ デプロイが完了しました"
+          echo "🌐 サイトURL: https://keiba-nyumon.netlify.app"
+          echo "📅 実行日時: $(date)"
+
+      - name: Failure notification
+        if: failure()
+        run: |
+          echo "❌ デプロイに失敗しました"
+          echo "📋 GitHub Actionsログを確認してください"
+          echo "🔗 https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}"
