@@ -1,14 +1,13 @@
 // @ts-check
-import { loadEnv } from 'vite';
 import { defineConfig } from 'astro/config';
 
 import react from '@astrojs/react';
 import tailwindcss from '@tailwindcss/vite';
 
-// 環境変数を読み込み（.envファイルとprocess.envをマージ）
-// ローカル: .envファイルから読み込み
-// Netlify: process.envの値で上書き（Netlifyの環境変数が優先）
-const env = { ...loadEnv('', process.cwd(), ''), ...process.env };
+// 環境変数の読み込み
+// ローカル: .envファイルからdotenvが自動読み込み（package.jsonのスクリプトで設定）
+// Netlify: process.envに直接設定される（Netlify環境変数から）
+// config.tsとnews.tsで直接process.envにアクセスする
 
 // https://astro.build/config
 export default defineConfig({
@@ -20,13 +19,7 @@ export default defineConfig({
   output: 'static', // 完全静的生成（Airtableから事前生成）
   vite: {
     plugins: [tailwindcss()],
-    // 環境変数をViteに明示的に渡す（.envファイルから読み込んだ値を使用）
-    define: {
-      'process.env.KEIBA_NYUMON_AIRTABLE_API_KEY': JSON.stringify(env.KEIBA_NYUMON_AIRTABLE_API_KEY || env.AIRTABLE_API_KEY || ''),
-      'process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID': JSON.stringify(env.KEIBA_NYUMON_AIRTABLE_BASE_ID || env.AIRTABLE_BASE_ID || ''),
-      'process.env.AIRTABLE_API_KEY': JSON.stringify(env.AIRTABLE_API_KEY || ''),
-      'process.env.AIRTABLE_BASE_ID': JSON.stringify(env.AIRTABLE_BASE_ID || ''),
-    },
+    // Astro/Nodeの標準環境変数アクセスを使用（defineは不要）
     build: {
       // チャンクサイズ最適化
       rollupOptions: {
