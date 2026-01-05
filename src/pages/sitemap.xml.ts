@@ -32,7 +32,10 @@ ${staticPages
 ${articles
   .map(
     (article) => {
-      const lastmod = article.publishedAt || new Date().toISOString().split('T')[0];
+      // ISO 8601形式（YYYY-MM-DD）に変換
+      const lastmod = article.publishedAt
+        ? new Date(article.publishedAt).toISOString().split('T')[0]
+        : new Date().toISOString().split('T')[0];
 
       return `  <url>
     <loc>${SITE_URL}/news/${article.slug}/</loc>
