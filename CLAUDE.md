@@ -134,6 +134,8 @@ keiba-guide-monorepo/
 - **画像**: Unsplash（固定プール、10枚/カテゴリ）
 - **ホスティング**: Netlify（完全SSG mode）
 - **ポート**: 4322（開発サーバー）
+- **分析**: Google Analytics 4（GA4）
+- **検索**: Google Search Console（GSC）
 
 ---
 
@@ -169,6 +171,9 @@ AIRTABLE_BASE_ID=appiHsDBAFFSmCiBV
 
 # Claude API（記事生成 - 必須）
 ANTHROPIC_API_KEY=sk-ant-api03-XXXXXXXXXXXX
+
+# Google Analytics 4（オプション）
+PUBLIC_GA4_MEASUREMENT_ID=G-XXXXXXXXXX  # GA4測定ID（G-から始まる）
 
 # サイト情報
 SITE_URL=https://keiba-nyumon.jp
@@ -317,6 +322,7 @@ Netlify Dashboard → Site settings → Environment variables
 | `KEIBA_NYUMON_AIRTABLE_API_KEY` | Airtable Personal Access Token |
 | `KEIBA_NYUMON_AIRTABLE_BASE_ID` | `appiHsDBAFFSmCiBV` |
 | `ANTHROPIC_API_KEY` | Claude APIキー（記事生成用） |
+| `PUBLIC_GA4_MEASUREMENT_ID` | GA4測定ID（G-から始まる、オプション） |
 
 ### 3. ドメイン設定
 
@@ -336,6 +342,94 @@ netlify deploy --prod
 ```
 
 または、Git push で自動デプロイ。
+
+---
+
+## Google Analytics 4（GA4）とGoogle Search Console（GSC）の設定
+
+### Google Analytics 4（GA4）
+
+#### 1. GA4プロパティの作成
+
+1. https://analytics.google.com/ にアクセス
+2. 「管理」→「プロパティを作成」
+3. プロパティ名: `keiba-nyumon`
+4. タイムゾーン: `日本`
+5. 通貨: `日本円（JPY）`
+6. データストリーム作成:
+   - プラットフォーム: `ウェブ`
+   - URL: `https://keiba-nyumon.jp`
+   - ストリーム名: `keiba-nyumon Web`
+7. 測定ID（G-XXXXXXXXX）をコピー
+
+#### 2. 環境変数の設定
+
+**.envファイル**（ローカル開発）:
+```bash
+PUBLIC_GA4_MEASUREMENT_ID=G-XXXXXXXXX  # あなたのGA4測定ID
+```
+
+**Netlify環境変数**:
+1. Netlify Dashboard → Site settings → Environment variables
+2. 「Add variable」をクリック
+3. Key: `PUBLIC_GA4_MEASUREMENT_ID`
+4. Value: `G-XXXXXXXXX`（あなたのGA4測定ID）
+5. 「Create variable」
+
+#### 3. デプロイ
+
+環境変数を設定後、再デプロイすると自動的にGA4トラッキングが有効になります。
+
+```bash
+netlify deploy --prod
+```
+
+または、Git push で自動デプロイ。
+
+#### 4. 動作確認
+
+1. https://keiba-nyumon.jp にアクセス
+2. ブラウザの開発者ツール（F12）→ Networkタブ
+3. `gtag/js` のリクエストが送信されていることを確認
+4. GA4管理画面 → リアルタイムレポート → アクティブユーザー数が1以上
+
+---
+
+### Google Search Console（GSC）
+
+#### 1. プロパティの追加
+
+1. https://search.google.com/search-console にアクセス
+2. 「プロパティを追加」をクリック
+3. URLプレフィックス: `https://keiba-nyumon.jp`
+4. 「続行」
+
+#### 2. サイト所有権の確認
+
+**HTMLタグ方式**（既に設定済み）:
+
+BaseLayout.astro に以下のメタタグが既に追加されています:
+```html
+<meta name="google-site-verification" content="LJ1qNn3SZFuo5zHjLtI58OZSKKXXeVugmiXG2SPGMe8" />
+```
+
+GSC管理画面で「確認」ボタンをクリックすれば完了です。
+
+#### 3. サイトマップの送信
+
+1. GSC → サイトマップ
+2. 新しいサイトマップの追加: `https://keiba-nyumon.jp/sitemap.xml`
+3. 「送信」
+
+**サイトマップの内容**:
+- 静的ページ（トップ、About、規約、プライバシー、お問い合わせ）
+- ニュース記事（最大100件、自動生成）
+
+#### 4. 動作確認
+
+1. GSC → カバレッジ
+2. 数日後、インデックス登録されたページが表示される
+3. サイトマップのステータスが「成功」になることを確認
 
 ---
 
@@ -403,6 +497,15 @@ npm run build
    - ローカル開発: Astroが `.env` から読み込み → `process.env` に設定
    - Netlifyデプロイ: Netlify環境変数 → `process.env` に設定
    - クライアントサイド: `typeof process !== 'undefined'` チェックで安全
+
+4. ✅ **Google Analytics 4（GA4）とGoogle Search Console（GSC）の設定**
+   - **GSC**: 既に設定済み（BaseLayout.astroに検証タグあり）
+   - **GA4**: トラッキングコードを実装
+     - src/config.ts: analytics設定を追加（ga4MeasurementId）
+     - src/layouts/BaseLayout.astro: Google タグ（gtag.js）を追加
+     - 環境変数: `PUBLIC_GA4_MEASUREMENT_ID`
+   - **サイトマップ**: 既に実装済み（src/pages/sitemap.xml.ts）
+   - **ドキュメント**: CLAUDE.mdにGA4/GSCの設定手順を詳細に追加
 
 ### 2025-12-26
 

@@ -16,6 +16,9 @@ export interface SiteConfig {
     baseId: string;
     apiKey: string;
   };
+  analytics: {
+    ga4MeasurementId?: string;
+  };
 }
 
 export const config: SiteConfig = {
@@ -49,6 +52,13 @@ export const config: SiteConfig = {
     apiKey: typeof process !== 'undefined' && process.env
       ? (process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY || '')
       : '',
+  },
+
+  // Analytics設定（Google Analytics 4）
+  analytics: {
+    ga4MeasurementId: typeof process !== 'undefined' && process.env
+      ? (process.env.PUBLIC_GA4_MEASUREMENT_ID || process.env.GA4_MEASUREMENT_ID)
+      : undefined,
   },
 };
 
