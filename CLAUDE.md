@@ -386,6 +386,24 @@ npm run build
 
 ## 作業履歴
 
+### 2026-01-05
+
+1. ✅ **トップページの記事表示問題を根本解決**
+   - **問題**: src/config.ts で `import.meta.env` を使って環境変数にアクセスしていたが、Astroでは `PUBLIC_` プレフィックスなしの環境変数は `import.meta.env` でアクセスできない
+   - **解決**: `import.meta.env` から `process.env` に変更（src/config.ts:46-51）
+   - **結果**: 89件の記事を正しく取得できるようになった
+   - **確認**: ビルド成功、HTMLに278個の記事リンク生成
+
+2. ✅ **環境変数読み込みの堅牢化**
+   - `dotenv` パッケージをインストール（devDependencies）
+   - Astroの自動環境変数読み込みに依存
+   - フォールバック機能: `KEIBA_NYUMON_*` → `AIRTABLE_*`
+
+3. ✅ **恒久的な解決確認**
+   - ローカル開発: Astroが `.env` から読み込み → `process.env` に設定
+   - Netlifyデプロイ: Netlify環境変数 → `process.env` に設定
+   - クライアントサイド: `typeof process !== 'undefined'` チェックで安全
+
 ### 2025-12-26
 
 1. ✅ **プロジェクト戦略の完全見直し**

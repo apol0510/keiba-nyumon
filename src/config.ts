@@ -41,10 +41,14 @@ export const config: SiteConfig = {
   },
 
   // Airtable設定（モノレポ対応：プロジェクト固有の環境変数名を優先）
-  // Astroの標準: import.meta.envを使用（ビルド時に環境変数が展開される）
+  // Node.js環境変数を直接アクセス（サーバーサイドのみ）
   airtable: {
-    baseId: import.meta.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || import.meta.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV',
-    apiKey: import.meta.env.KEIBA_NYUMON_AIRTABLE_API_KEY || import.meta.env.AIRTABLE_API_KEY || '',
+    baseId: typeof process !== 'undefined' && process.env
+      ? (process.env.KEIBA_NYUMON_AIRTABLE_BASE_ID || process.env.AIRTABLE_BASE_ID || 'appiHsDBAFFSmCiBV')
+      : 'appiHsDBAFFSmCiBV',
+    apiKey: typeof process !== 'undefined' && process.env
+      ? (process.env.KEIBA_NYUMON_AIRTABLE_API_KEY || process.env.AIRTABLE_API_KEY || '')
+      : '',
   },
 };
 
