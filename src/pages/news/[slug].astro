@@ -31,6 +31,8 @@ try {
 // 構造化データ
 const siteUrl = config.domain ? `https://${config.domain}` : 'https://keiba-nyumon.jp';
 const articleUrl = `${siteUrl}/news/${slug}/`;
+
+// NewsArticle構造化データ
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'NewsArticle',
@@ -56,6 +58,32 @@ const structuredData = {
   inLanguage: 'ja-JP',
 };
 
+// BreadcrumbList構造化データ（SEO最適化）
+const breadcrumbStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'ホーム',
+      item: `${siteUrl}/`
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: 'ニュース',
+      item: `${siteUrl}/#news`
+    },
+    {
+      '@type': 'ListItem',
+      position: 3,
+      name: article.title,
+      item: articleUrl
+    }
+  ]
+};
+
 // Markdownを簡易的にHTMLに変換
 function markdownToHtml(markdown: string): string {
   return markdown
@@ -77,8 +105,11 @@ const htmlContent = markdownToHtml(article.content);
   title={`${article.title} | ${config.name}`}
   description={article.excerpt}
 >
-  <!-- 構造化データ -->
+  <!-- 構造化データ: NewsArticle -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
+
+  <!-- 構造化データ: BreadcrumbList（SEO最適化） -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbStructuredData)} />
 
   <!-- 記事コンテンツ -->
   <article class="article-container">
