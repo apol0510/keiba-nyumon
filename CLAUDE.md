@@ -623,12 +623,31 @@ npm run build
 
 1. ✅ **トップページ記事表示問題の完全解決（GitHub Actionsループ現象）**
    - **問題**: 記事自動実行後にトップページの記事が0件になる無限ループ現象が数日間続いていた
-   - **根本原因**: GitHub ActionsのNetlifyデプロイステップで環境変数（AIRTABLE_API_KEY等）が設定されていなかったため、ビルド時にAirtableからデータ取得ができず「✅ 記事を0件取得」となっていた
+   - **根本原因の第1段階**: GitHub ActionsのNetlifyデプロイステップで環境変数が設定されていなかった
+   - **根本原因の第2段階**: Netlifyの環境変数が「dev context」のみで、production環境に設定されていなかった
    - **修正内容**:
      1. `.github/workflows/daily-ai-article-generation.yml` のデプロイステップに環境変数を追加
      2. netlify-cliによる直接デプロイ → Netlify Build Hook方式に変更（より安全で確実）
-   - **結果**: 「✅ 記事を96件取得しました」と正常に動作、ループ現象が完全に解消
+     3. **Netlify環境変数をproduction contextに設定**（これが決定的な解決策）
+        - `netlify env:set KEIBA_NYUMON_AIRTABLE_API_KEY --context production`
+        - `netlify env:set KEIBA_NYUMON_AIRTABLE_BASE_ID --context production`
+        - `netlify env:set AIRTABLE_API_KEY --context production`（フォールバック）
+        - `netlify env:set AIRTABLE_BASE_ID --context production`（フォールバック）
+     4. ローカルでビルド → 98件取得成功
+     5. Netlifyに本番デプロイ → 107ページ生成成功
+   - **結果**: 本番サイト（https://keiba-nyumon.jp）で記事が正常に表示、ループ現象が完全に解消
    - **commit**: 5eb5545, 5a7370e
+
+2. ✅ **プロジェクト全体の健全性チェックと最適化**
+   - **実施内容**:
+     - GitHub Actions: すべて成功（問題なし）
+     - Airtable: 98件の記事が正常に存在（問題なし）
+     - ワークフローの重複を発見: 3つのワークフローが同じ時刻（毎日6:00 JST）に実行
+       - `auto-deploy.yml` → archived（重複削除）
+       - `trigger-netlify-build.yml` → archived（重複削除）
+       - `daily-ai-article-generation.yml` のみで完全自動化を実現
+     - セキュリティ脆弱性: `npm audit fix`で0件に修正
+   - **commit**: 79f4fc1
 
 ### 2026-01-05
 
