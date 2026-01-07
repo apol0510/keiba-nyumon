@@ -123,6 +123,8 @@ const optimizedAlt = `${categoryLabel}: ${title} - 競馬初心者向け解説�
     position: relative;
     overflow: hidden;
     box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.1);
+    content-visibility: auto;
+    contain-intrinsic-size: 400px;
   }
 
   /* サムネイル画像 */
@@ -329,7 +331,7 @@ const optimizedAlt = `${categoryLabel}: ${title} - 競馬初心者向け解説�
 </style>
 
 <script>
-  // クライアント側で相対時間を計算
+  // クライアント側で相対時間を計算（パフォーマンス最適化版）
   function updateRelativeTimes() {
     const timeElements = document.querySelectorAll('.relative-time');
 
@@ -367,8 +369,13 @@ const optimizedAlt = `${categoryLabel}: ${title} - 競馬初心者向け解説�
     });
   }
 
-  // ページ読み込み時に実行
-  updateRelativeTimes();
+  // ページ読み込み時に実行（アイドル時に実行してパフォーマンス向上）
+  if ('requestIdleCallback' in window) {
+    requestIdleCallback(updateRelativeTimes);
+  } else {
+    // フォールバック: requestIdleCallbackがサポートされていない場合
+    setTimeout(updateRelativeTimes, 1);
+  }
 
   // 1分ごとに更新（オプション - ユーザーがページを開いたままの場合）
   setInterval(updateRelativeTimes, 60000);
