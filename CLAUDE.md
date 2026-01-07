@@ -154,6 +154,9 @@ npm run preview
 # AI記事自動生成
 ANTHROPIC_API_KEY=xxx AIRTABLE_API_KEY=xxx AIRTABLE_BASE_ID=xxx \
 ARTICLE_COUNT=12 node scripts/generate-ai-news.cjs
+
+# X (Twitter) 自動投稿
+npm run post:x
 ```
 
 ---
@@ -174,6 +177,12 @@ ANTHROPIC_API_KEY=sk-ant-api03-XXXXXXXXXXXX
 
 # Google Analytics 4（オプション）
 PUBLIC_GA4_MEASUREMENT_ID=G-XXXXXXXXXX  # GA4測定ID（G-から始まる）
+
+# X (Twitter) 自動投稿（オプション）
+X_API_KEY=XXXXXXXXXXXXXXXXXXXXXXX        # X API Consumer Key
+X_API_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  # X API Consumer Secret
+X_ACCESS_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  # X Access Token
+X_ACCESS_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX  # X Access Token Secret
 
 # サイト情報
 SITE_URL=https://keiba-nyumon.jp
@@ -207,6 +216,8 @@ SITE_URL=https://keiba-nyumon.jp
 | IsFeatured | Checkbox | 注目記事フラグ |
 | Author | Single line text | 著者名 |
 | PublishedAt | Date | 公開日時（ISO 8601形式） |
+| TweetID | Single line text | X（Twitter）投稿ID（X自動投稿で使用） |
+| TweetedAt | Date | X投稿日時（ISO 8601形式） |
 | CreatedAt | Created time | 作成日時 |
 
 **注意**: サムネイル画像は `ThumbnailUrl` (テキストURL) を使用します。Unsplash固定プールから自動選択されます。
@@ -237,6 +248,7 @@ keiba-nyumon/
 │   └── config.ts               # サイト設定
 ├── scripts/
 │   ├── generate-ai-news.cjs    # AI記事自動生成
+│   ├── post-to-x.cjs           # X (Twitter) 自動投稿
 │   ├── fix-published-dates.cjs # 既存記事の日付修正
 │   └── lib/
 │       └── image-generator.cjs # 画像生成ユーティリティ
@@ -297,6 +309,133 @@ node scripts/generate-ai-news.cjs
 - 「血統データの読み方」
 - 「過去データの活用方法」
 - 「AI予想サービスの選び方」→ keiba-data への導線
+
+---
+
+## X (Twitter) 自動投稿
+
+### 概要
+
+新規公開されたニュース記事を自動的にX（Twitter）に投稿するスクリプトです。
+
+### 機能
+
+- **自動投稿**: `Status='published'` かつ `TweetID` が空の記事を自動検出
+- **画像付き投稿**: サムネイル画像（ThumbnailUrl）を自動ダウンロードして投稿
+- **カテゴリ別絵文字**: カテゴリに応じた絵文字を自動選択
+  - `kiso` (競馬の基礎知識): 📚
+  - `baken` (馬券の買い方): 🎫
+  - `yougo` (競馬用語集): 📖
+  - `nankan` (南関競馬入門): 🏇
+  - `data` (データ予想入門): 📊
+- **初心者向けハッシュタグ**: `#競馬初心者 #競馬入門` を自動付与
+- **レート制限対応**: 1回の実行で最大3件まで投稿、15秒間隔で投稿
+- **Airtable自動更新**: 投稿後、TweetIDとTweetedAtを自動記録
+
+### セットアップ
+
+#### 1. X Developer Portal でアプリ作成
+
+1. https://developer.twitter.com/en/portal/dashboard にアクセス
+2. 「Create Project」→「Create App」
+3. App権限設定: **Read and Write** （投稿には書き込み権限が必要）
+4. 以下の認証情報を取得:
+   - API Key (Consumer Key)
+   - API Key Secret (Consumer Secret)
+   - Access Token
+   - Access Token Secret
+
+#### 2. Airtable Newsテーブルにフィールド追加
+
+以下の2つのフィールドを手動で追加してください:
+
+| フィールド名 | タイプ | 説明 |
+|-------------|--------|------|
+| TweetID | Single line text | X投稿ID（自動投稿スクリプトが記録） |
+| TweetedAt | Date | X投稿日時（ISO 8601形式、自動記録） |
+
+#### 3. 環境変数設定
+
+`.env` ファイルに以下を追加:
+
+```bash
+# X (Twitter) API認証情報
+X_API_KEY=XXXXXXXXXXXXXXXXXXXXXXX
+X_API_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X_ACCESS_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+X_ACCESS_SECRET=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+
+### 実行方法
+
+```bash
+# 環境変数を読み込んで実行
+npm run post:x
+
+# または直接実行
+node scripts/post-to-x.cjs
+```
+
+### 動作フロー
+
+1. Airtableから未投稿記事を取得（`Status='published'` かつ `TweetID` が空）
+2. 最新3件まで取得（FREE API制限対応）
+3. 各記事について:
+   - ツイート本文生成（280文字制限、カテゴリ絵文字、ハッシュタグ付き）
+   - サムネイル画像をダウンロード
+   - 画像をXにアップロード
+   - ツイート投稿（画像付き）
+   - AirtableにTweetIDとTweetedAtを記録
+   - 15秒待機（レート制限対策）
+
+### 注意事項
+
+- **X API制限**: Free版は1日50ツイート、月1500ツイートまで
+- **投稿数制限**: 1回の実行で最大3件まで投稿（安全のため）
+- **画像形式**: JPG/PNG（Unsplashから取得）
+- **文字数制限**: タイトルが長い場合は自動短縮（280文字以内）
+- **エラー処理**: 1件失敗しても次の記事の投稿を続行
+
+### GitHub Actions 自動化（推奨）
+
+毎日定期的にX投稿を実行する場合は、GitHub Actionsを設定してください:
+
+``yaml
+name: X Auto Post
+on:
+  schedule:
+    - cron: '0 9 * * *'  # 毎日9:00 UTC（日本時間18:00）
+  workflow_dispatch:  # 手動実行も可能
+
+jobs:
+  post-to-x:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+      - run: npm install
+      - run: npm run post:x
+        env:
+          KEIBA_NYUMON_AIRTABLE_API_KEY: ${{ secrets.KEIBA_NYUMON_AIRTABLE_API_KEY }}
+          KEIBA_NYUMON_AIRTABLE_BASE_ID: ${{ secrets.KEIBA_NYUMON_AIRTABLE_BASE_ID }}
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+          SITE_URL: https://keiba-nyumon.jp
+``
+
+**GitHub Secrets設定**:
+1. GitHubリポジトリ → Settings → Secrets and variables → Actions
+2. 「New repository secret」で以下を追加:
+   - `KEIBA_NYUMON_AIRTABLE_API_KEY`
+   - `KEIBA_NYUMON_AIRTABLE_BASE_ID`
+   - `X_API_KEY`
+   - `X_API_SECRET`
+   - `X_ACCESS_TOKEN`
+   - `X_ACCESS_SECRET`
 
 ---
 
@@ -480,6 +619,17 @@ npm run build
 
 ## 作業履歴
 
+### 2026-01-07
+
+1. ✅ **トップページ記事表示問題の完全解決（GitHub Actionsループ現象）**
+   - **問題**: 記事自動実行後にトップページの記事が0件になる無限ループ現象が数日間続いていた
+   - **根本原因**: GitHub ActionsのNetlifyデプロイステップで環境変数（AIRTABLE_API_KEY等）が設定されていなかったため、ビルド時にAirtableからデータ取得ができず「✅ 記事を0件取得」となっていた
+   - **修正内容**:
+     1. `.github/workflows/daily-ai-article-generation.yml` のデプロイステップに環境変数を追加
+     2. netlify-cliによる直接デプロイ → Netlify Build Hook方式に変更（より安全で確実）
+   - **結果**: 「✅ 記事を96件取得しました」と正常に動作、ループ現象が完全に解消
+   - **commit**: 5eb5545, 5a7370e
+
 ### 2026-01-05
 
 1. ✅ **トップページの記事表示問題を根本解決**
@@ -506,6 +656,19 @@ npm run build
      - 環境変数: `PUBLIC_GA4_MEASUREMENT_ID`
    - **サイトマップ**: 既に実装済み（src/pages/sitemap.xml.ts）
    - **ドキュメント**: CLAUDE.mdにGA4/GSCの設定手順を詳細に追加
+
+5. ✅ **X (Twitter) 自動投稿機能の実装**
+   - **スクリプト作成**: scripts/post-to-x.cjs を実装
+     - keiba-matome-monorepoの実装を参考に、keiba-nyumon向けにカスタマイズ
+     - カテゴリ別絵文字（📚/🎫/📖/🏇/📊）
+     - 初心者向けハッシュタグ（#競馬初心者 #競馬入門）
+     - 画像付き投稿（ThumbnailUrlから自動取得）
+     - レート制限対応（最大3件/回、15秒間隔）
+   - **依存関係**: `twitter-api-v2` をインストール（v1.28.0）
+   - **package.json**: `post:x` スクリプトコマンドを追加
+   - **Airtableスキーマ**: TweetID（Single line text）、TweetedAt（Date）フィールドを追加
+   - **環境変数**: X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET
+   - **ドキュメント**: CLAUDE.mdにX自動投稿の詳細なセットアップ手順、GitHub Actions設定例を追加
 
 ### 2025-12-26
 
