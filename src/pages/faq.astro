@@ -1,93 +1,34 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Breadcrumb from '../components/Breadcrumb.astro';
+import { config } from '../config';
 
-const breadcrumbItems = [
-  { label: 'よくある質問' }
-];
-
+// FAQ データ
 const faqs = [
   {
-    question: '競馬予想サイトとは何ですか？',
-    answer: '競馬予想サイトとは、競馬レースの予想情報を提供するウェブサイトです。プロの予想家やAIによる分析、過去データに基づいた買い目情報などを提供し、競馬ファンの馬券購入をサポートします。無料で情報を提供するサイトから、有料会員制のサイトまで様々な形態があります。'
+    question: '競馬は初めてでも楽しめますか？',
+    answer: 'はい、競馬は初心者でも十分に楽しめます。馬券を買わずにレースを観戦するだけでも迫力があり、パドックで馬を見たり、競馬場のグルメを楽しんだりと様々な楽しみ方があります。初心者向けのガイドツアーを実施している競馬場もあるので、気軽に参加してみてください。'
   },
   {
-    question: '無料の競馬予想サイトと有料サイトの違いは？',
-    answer: '無料サイトは基本的な予想情報やオッズ情報を無料で提供しますが、詳細な分析や高精度な予想は有料会員向けとなることが多いです。有料サイトでは、プロの予想家による詳細な分析、的中率の高い買い目、サポート体制などが充実しています。初心者の方はまず無料サイトで試してみることをおすすめします。'
+    question: '馬券はいくらから買えますか？',
+    answer: '馬券は100円から購入できます。単勝・複勝・馬連・ワイド・馬単・三連複・三連単など様々な種類があり、すべて100円単位で購入可能です。初心者の方は、まず100円の単勝や複勝から始めることをおすすめします。'
   },
   {
-    question: '南関競馬と中央競馬の予想サイトの違いは？',
-    answer: '南関競馬（大井・川崎・船橋・浦和）と中央競馬（JRA）では、レースの特性やデータの蓄積が異なるため、それぞれに特化した予想サイトがあります。南関競馬は平日開催が多く、比較的少ない頭数でのレースが特徴です。中央競馬は週末開催が中心で、重賞レースなど大きなレースが多数あります。'
+    question: '競馬場には何を持っていけばいいですか？',
+    answer: '基本的には特別な持ち物は不要です。入場料（100〜200円程度）、馬券を買うための現金（3,000〜5,000円程度がおすすめ）、筆記用具（出走表にメモを取る場合）、双眼鏡（あるとレース観戦がより楽しめます）があると良いでしょう。競馬場内には売店もあるので、手ぶらでも問題ありません。'
   },
   {
-    question: '競馬予想サイトの口コミは信頼できますか？',
-    answer: '当サイトでは、実際に利用したユーザーによる口コミを承認制で掲載しています。極端に良い評価や悪い評価だけでなく、複数の口コミを総合的に判断することが重要です。また、口コミ数が多く、継続的に投稿されているサイトの方が信頼性が高い傾向にあります。'
+    question: 'レース当日の流れを教えてください',
+    answer: '競馬場に到着したら、まず入場券を購入して入場します。出走表を確認して気になるレースをチェックし、レース前にパドックで馬を観察します。馬券売場で馬券を購入したら、ターフビジョン前やスタンドでレースを観戦。レース後は払戻窓口で的中馬券を換金できます。このサイクルを繰り返しながら一日を楽しみましょう。'
   },
   {
-    question: '予想サイトの的中率はどのくらいが目安ですか？',
-    answer: '競馬予想の的中率は、賭け式によって大きく異なります。単勝・複勝であれば30〜50%、馬連・馬単で20〜30%、3連複・3連単で10〜20%程度が一般的な目安です。ただし、的中率だけでなく回収率（投資額に対するリターン）も重要な指標となります。100%以上の回収率を維持できるサイトは優良と言えます。'
-  },
-  {
-    question: '競馬予想サイトを選ぶ際のポイントは？',
-    answer: '以下のポイントを確認することをおすすめします：1) 口コミ評価と投稿数の多さ、2) 無料予想の提供有無、3) 的中実績の公開状況、4) 料金体系の明確さ、5) サポート体制の充実度、6) 個人情報の取り扱い方針。また、複数のサイトを比較検討し、少額から始めることをおすすめします。'
-  },
-  {
-    question: '予想サイトの料金相場はどのくらいですか？',
-    answer: '有料予想サイトの料金は、月額5,000円〜30,000円程度が一般的です。単発の予想情報であれば、1レース500円〜5,000円程度で購入できるサイトもあります。高額な料金を請求するサイトもありますが、料金の高さと予想の精度は必ずしも比例しないため、口コミや実績をしっかり確認することが重要です。'
-  },
-  {
-    question: '競馬予想サイトの登録に必要な情報は？',
-    answer: '一般的には、メールアドレス、ニックネーム（またはユーザー名）、パスワードが必要です。有料サービスを利用する場合は、氏名、住所、電話番号、決済情報などの追加情報が必要になることがあります。個人情報の取り扱いについては、プライバシーポリシーを必ず確認しましょう。'
-  },
-  {
-    question: '悪質な競馬予想サイトの見分け方は？',
-    answer: '以下のような特徴がある場合は注意が必要です：1) 「絶対当たる」「100%的中」などの誇大広告、2) 高額な情報料金の前払いを要求、3) 的中実績の捏造や改ざん、4) 解約や退会が困難、5) 個人情報の不適切な取り扱い、6) サポート対応の不備。当サイトの口コミを参考に、評判の良いサイトを選びましょう。'
-  },
-  {
-    question: 'AI予想と人間の予想、どちらが当たりますか？',
-    answer: 'AI予想は膨大なデータを高速処理できる利点がありますが、馬の調子や騎手の状態など、数値化できない要素の判断は苦手です。一方、人間の予想家は経験と勘による判断ができますが、主観が入ることもあります。最近では、AIと人間の予想を組み合わせたハイブリッド型の予想サイトも増えています。'
-  },
-  {
-    question: '競馬予想サイトで本当に稼げますか？',
-    answer: '競馬予想サイトを利用すれば必ず稼げるわけではありません。競馬は不確定要素が多く、プロの予想でも100%的中することはありません。ただし、優良な予想サイトを利用することで、自分で予想するよりも的中率や回収率を上げられる可能性はあります。資金管理を徹底し、余裕資金の範囲内で楽しむことが重要です。'
-  },
-  {
-    question: 'G1レースの予想に強いサイトはありますか？',
-    answer: 'はい、G1レースや重賞レースに特化した予想サイトがあります。これらのサイトは、過去の重賞実績データや血統分析、調教情報などを詳しく提供しています。当サイトのランキングやカテゴリ別ページで、G1レースに強いと評判のサイトを探すことができます。口コミで「G1的中」などのキーワードを確認すると良いでしょう。'
-  },
-  {
-    question: '地方競馬の予想サイトも評価していますか？',
-    answer: 'はい、当サイトでは南関競馬（大井・川崎・船橋・浦和）や地方競馬（園田・金沢・名古屋・高知など）に特化した予想サイトも多数掲載しています。地方競馬は中央競馬とは異なる特性があるため、専門サイトの利用をおすすめします。カテゴリページから地方競馬専門サイトを探せます。'
-  },
-  {
-    question: '競馬予想サイトの解約方法は？',
-    answer: '解約方法はサイトによって異なりますが、一般的にはマイページやアカウント設定から退会手続きができます。有料会員の場合は、契約期間や解約申請の期限に注意が必要です。解約手続きが複雑だったり、引き止められたりするサイトは要注意です。入会前に解約方法を確認しておくことをおすすめします。'
-  },
-  {
-    question: 'スマホでも競馬予想サイトは使えますか？',
-    answer: 'ほとんどの競馬予想サイトはスマートフォンに対応しています。専用アプリを提供しているサイトもあれば、レスポンシブデザインでブラウザから利用できるサイトもあります。外出先でもレース直前情報を確認できるため、スマホ対応は重要なポイントです。'
-  },
-  {
-    question: '初心者におすすめの競馬予想サイトは？',
-    answer: '初心者の方には、無料予想が充実していて、予想の根拠を詳しく解説してくれるサイトがおすすめです。また、サポート体制が整っていて、分からないことを気軽に質問できるサイトが良いでしょう。当サイトのランキング上位のサイトは、初心者にも使いやすいと評判のサイトが多いです。'
-  },
-  {
-    question: '競馬予想サイトの買い目はどう活用すればいい？',
-    answer: '予想サイトの買い目をそのまま購入するのも良いですが、自分の予想と組み合わせたり、複数のサイトの予想を参考にしたりする方法もあります。また、提示された買い目の点数を減らして投資額を調整することも可能です。重要なのは、買い目の根拠を理解し、納得した上で購入することです。'
-  },
-  {
-    question: '競馬予想サイトのメルマガは役立ちますか？',
-    answer: 'メルマガでは、レース直前の情報や、その日の注目馬、オッズ変動などのタイムリーな情報が配信されます。ただし、メールが多すぎて管理が大変になることもあるため、必要な情報だけを受信できるように設定を調整することをおすすめします。'
-  },
-  {
-    question: '競馬予想サイトの実績は信用できる？',
-    answer: '予想サイトが公開している実績は、サイトによって信頼性が異なります。的中レースのスクリーンショットや、第三者機関による検証がある場合は信頼性が高いです。一方、過去に遡って都合の良いレースだけを掲載している可能性もあります。口コミで「実績通りだった」「実績と違う」などのコメントを確認すると良いでしょう。'
-  },
-  {
-    question: '競馬予想サイトは税金がかかりますか？',
-    answer: '競馬の払戻金は、一時所得として課税対象になります。年間50万円を超える利益がある場合は、確定申告が必要です。予想サイトの利用料金は、競馬の経費として計上できる可能性がありますが、詳しくは税理士や税務署にご相談ください。'
+    question: '初心者におすすめの馬券は？',
+    answer: '初心者には「単勝」（1着になる馬を当てる）または「複勝」（3着以内に入る馬を当てる）がおすすめです。特に複勝は3着以内なら的中となるため当たりやすく、競馬の楽しさを実感しやすいです。慣れてきたら「ワイド」（2頭が3着以内に入る組み合わせ）にも挑戦してみましょう。'
   }
 ];
+
+// SEO用
+const siteUrl = config.domain ? `https://${config.domain}` : 'https://keiba-nyumon.jp';
+const faqUrl = `${siteUrl}/faq/`;
 
 // FAQPage構造化データ
 const faqStructuredData = {
@@ -112,135 +53,77 @@ const breadcrumbStructuredData = {
       '@type': 'ListItem',
       position: 1,
       name: 'ホーム',
-      item: 'https://keiba-review.com/'
+      item: `${siteUrl}/`
     },
     {
       '@type': 'ListItem',
       position: 2,
       name: 'よくある質問',
-      item: 'https://keiba-review.com/faq/'
+      item: faqUrl
     }
   ]
 };
 ---
 
 <BaseLayout
-  title="よくある質問（FAQ）| 競馬予想サイト口コミ比較"
-  description="競馬予想サイトに関するよくある質問をまとめました。予想サイトの選び方、料金相場、的中率の目安、悪質サイトの見分け方など、初心者の方にも分かりやすく解説しています。"
+  title={`よくある質問（FAQ） | ${config.name}`}
+  description="競馬初心者の方からよく寄せられる質問にお答えします。馬券の買い方、競馬場での過ごし方、レースの見方など、初めての方でも安心して競馬を楽しめる情報をQ&A形式で解説します。"
 >
-  <!-- FAQPage構造化データ -->
+  <!-- 構造化データ: FAQPage -->
   <script type="application/ld+json" set:html={JSON.stringify(faqStructuredData)} />
 
-  <!-- BreadcrumbList構造化データ -->
+  <!-- 構造化データ: BreadcrumbList -->
   <script type="application/ld+json" set:html={JSON.stringify(breadcrumbStructuredData)} />
 
-  <div class="max-w-4xl mx-auto px-4 py-8">
-    <Breadcrumb items={breadcrumbItems} />
+  <div class="faq-page">
+    <!-- パンくずリスト -->
+    <nav class="breadcrumb">
+      <a href="/">ホーム</a>
+      <span class="separator">›</span>
+      <span class="current">よくある質問</span>
+    </nav>
 
-    <!-- Header -->
-    <div class="mb-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-3">
-        よくある質問（FAQ）
-      </h1>
-      <p class="text-gray-600 leading-relaxed">
-        競馬予想サイトに関するよくある質問をまとめました。サイト選びの参考にしてください。
+    <!-- FAQヘッダー -->
+    <header class="faq-header">
+      <div class="faq-icon">❓</div>
+      <h1 class="faq-title">よくある質問（FAQ）</h1>
+      <p class="faq-description">
+        競馬初心者の方からよく寄せられる質問にお答えします。
       </p>
-    </div>
+    </header>
 
-    <!-- Quick Links -->
-    <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6 mb-8 border border-blue-100">
-      <h2 class="text-lg font-bold text-gray-900 mb-4">お探しの情報はこちらから</h2>
-      <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-        <a href="/keiba-yosou/" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-          競馬予想サイト一覧
-        </a>
-        <a href="/ranking/" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-          総合ランキング
-        </a>
-        <a href="/keiba-yosou/nankan/" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-          南関競馬予想サイト
-        </a>
-        <a href="/contact/" class="flex items-center gap-2 text-blue-600 hover:text-blue-700 font-medium">
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-          お問い合わせ
-        </a>
-      </div>
-    </div>
-
-    <!-- FAQ List -->
-    <div class="space-y-4">
+    <!-- FAQ リスト -->
+    <div class="faq-list">
       {faqs.map((faq, index) => (
-        <details class="bg-white rounded-lg shadow-md border border-gray-200 overflow-hidden group">
-          <summary class="cursor-pointer p-6 hover:bg-gray-50 transition-colors">
-            <div class="flex items-start gap-4">
-              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-sm">
-                Q{index + 1}
-              </div>
-              <div class="flex-1">
-                <h3 class="font-bold text-gray-900 text-lg group-open:text-blue-600 transition-colors">
-                  {faq.question}
-                </h3>
-              </div>
-              <svg class="w-6 h-6 text-gray-400 group-open:rotate-180 transition-transform flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
-              </svg>
-            </div>
+        <details class="faq-item">
+          <summary class="faq-question">
+            <span class="question-icon">Q{index + 1}</span>
+            <span class="question-text">{faq.question}</span>
           </summary>
-          <div class="px-6 pb-6">
-            <div class="flex items-start gap-4 pt-4 border-t border-gray-100">
-              <div class="flex-shrink-0 w-8 h-8 rounded-full bg-green-100 text-green-600 flex items-center justify-center font-bold text-sm">
-                A
-              </div>
-              <div class="flex-1">
-                <p class="text-gray-700 leading-relaxed">
-                  {faq.answer}
-                </p>
-              </div>
-            </div>
+          <div class="faq-answer">
+            <span class="answer-icon">A</span>
+            <p>{faq.answer}</p>
           </div>
         </details>
       ))}
     </div>
-
-    <!-- CTA Section -->
-    <div class="mt-12 bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-8 text-center border border-blue-100">
-      <h2 class="text-2xl font-bold text-gray-900 mb-3">
-        お探しの情報が見つかりませんでしたか？
-      </h2>
-      <p class="text-gray-600 mb-6">
-        その他のご質問がございましたら、お気軽にお問い合わせください。
-      </p>
-      <div class="flex flex-wrap justify-center gap-4">
-        <a
-          href="/contact/"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-blue-600 hover:bg-blue-50 text-blue-600 font-bold rounded-lg transition-colors shadow-sm"
-        >
-          お問い合わせ
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </a>
-        <a
-          href="/keiba-yosou/"
-          class="inline-flex items-center gap-2 px-6 py-3 bg-white border-2 border-gray-300 hover:border-gray-400 hover:bg-gray-50 text-gray-700 font-medium rounded-lg transition-colors"
-        >
-          サイト一覧を見る
-          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
-          </svg>
-        </a>
-      </div>
-    </div>
   </div>
 </BaseLayout>
+
+<style>
+  .faq-page { max-width: 900px; margin: 0 auto; padding: 2rem 1rem; }
+  .breadcrumb { display: flex; align-items: center; gap: 0.5rem; font-size: 0.875rem; color: #6b7280; margin-bottom: 2rem; }
+  .breadcrumb a { color: #42a5f5; text-decoration: none; }
+  .separator { color: #d1d5db; }
+  .current { color: #111827; font-weight: 500; }
+  .faq-header { text-align: center; margin-bottom: 3rem; padding: 3rem 2rem; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(20px); border-radius: 24px; }
+  .faq-icon { font-size: 4rem; margin-bottom: 1rem; }
+  .faq-title { font-size: 2.5rem; font-weight: 800; color: #111827; margin: 0 0 1rem 0; }
+  .faq-description { font-size: 1.125rem; color: #6b7280; }
+  .faq-list { display: flex; flex-direction: column; gap: 1rem; }
+  .faq-item { background: rgba(255, 255, 255, 0.7); border-radius: 16px; padding: 1.5rem; }
+  .faq-question { font-weight: 600; display: flex; gap: 1rem; cursor: pointer; }
+  .question-icon { background: #38bdf8; color: white; padding: 0.5rem; border-radius: 8px; }
+  .faq-answer { margin-top: 1rem; padding-left: 3rem; }
+  .answer-icon { background: rgba(56, 189, 248, 0.1); color: #0ea5e9; padding: 0.5rem; border-radius: 8px; margin-right: 1rem; }
+</style>
