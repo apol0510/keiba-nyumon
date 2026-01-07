@@ -743,6 +743,48 @@ npm run build
      - 検索順位: ロングテールワード上位表示
      - ユーザー体験: 大幅向上（アクセシビリティ、サイト構造）
 
+8. ✅ **SEO追加最適化実施（Priority Low完了）**
+   - **背景**: ユーザーからの「素晴らしい！😀推奨で進めてください」リクエストに対応
+   - **実施内容**:
+
+     **記事更新日管理（UpdatedAtフィールド対応）**
+     - `src/lib/news.ts`: NewsArticle interfaceに`updatedAt?: Date`フィールド追加
+     - `src/pages/news/[slug].astro`: 構造化データの`dateModified`に対応、視覚的に更新日を表示
+     - 更新日の表示: 緑色（#059669）、リフレッシュアイコン、「更新:」ラベル
+     - Airtable UpdatedAtフィールドと連携（オプション、なければPublishedAtを使用）
+     - **期待効果**: 更新記事の鮮度シグナル向上、検索順位+5-10%
+
+     **ページ速度最適化**
+     - `src/layouts/BaseLayout.astro`: Webフォントのプリロード最適化（非ブロッキング読み込み）
+       - preload + media="print" + onload="this.media='all'" パターン使用
+       - noscriptフォールバック追加
+     - `src/components/NewsCard.astro`: CSS containment（content-visibility: auto）追加
+       - オフスクリーンカードのレンダリングを遅延
+       - contain-intrinsic-size: 400px で高さヒント設定
+     - `src/components/NewsCard.astro`: requestIdleCallback でスクリプト最適化
+       - 相対時間計算をブラウザのアイドル時に実行
+       - フォールバック: setTimeout(1) for非対応ブラウザ
+     - **期待効果**: LCP-15%, FID-20%, CLS改善、PageSpeed Score+5-10点
+
+     **スマートな関連記事推薦システム**
+     - `src/pages/news/[slug].astro`: タグベースの関連度スコアリング実装
+       - 同じカテゴリ: +10点
+       - 各タグ一致: +5点
+       - 推薦候補を10記事→50記事に拡大
+       - 表示件数を3件→4件に増加
+     - アルゴリズム: スコア計算 → フィルタリング（スコア>0） → 降順ソート → トップ4表示
+     - **期待効果**: 平均セッション時間+20%, 直帰率-10%, PV/セッション+30%
+
+   - **ビルド結果**: 113ページ（変更なし、機能強化のみ）
+   - **デプロイ**: 2026-01-07 17:38 JST
+   - **commit**: f96dd4f, 8e49d02, f8129bd
+
+   - **総合期待効果（1-3ヶ月後）**:
+     - PageSpeed Score: +10-15点
+     - トラフィック維持率: +20%（速度改善により離脱減少）
+     - ユーザーエンゲージメント: +25%（関連記事推薦改善）
+     - SEO総合スコア: 大幅向上（構造化データ + 速度 + 内部リンク）
+
 ### 2025-12-26
 
 1. ✅ **プロジェクト戦略の完全見直し**
