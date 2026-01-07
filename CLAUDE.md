@@ -689,6 +689,23 @@ npm run build
    - **環境変数**: X_API_KEY, X_API_SECRET, X_ACCESS_TOKEN, X_ACCESS_SECRET
    - **ドキュメント**: CLAUDE.mdにX自動投稿の詳細なセットアップ手順、GitHub Actions設定例を追加
 
+### 2026-01-07 (続き)
+
+6. ✅ **BreadcrumbList構造化データ実装（SEO最優先課題）**
+   - **背景**: ユーザーからの質問「seo最適化や何か推奨することはありますか？」に対応
+   - **実装内容**: 記事ページにBreadcrumbList構造化データを追加
+     - `src/pages/news/[slug].astro`: パンくずリスト構造化データを追加
+     - Schema.org仕様に準拠（@type: "BreadcrumbList"）
+     - 3階層のパンくず: ホーム > ニュース > 記事タイトル
+     - NewsArticle構造化データと併記（両方のJSON-LDを出力）
+   - **検証**: ローカルビルド成功（108ページ）、生成HTMLで構造化データ確認
+   - **デプロイ**: Netlify本番環境に反映（https://keiba-nyumon.jp）
+   - **期待効果**:
+     - Google検索結果にパンくずリスト表示
+     - CTR（クリック率）+5-10%
+     - 検索順位向上（リッチリザルト対応）
+     - ユーザビリティ向上
+
 ### 2025-12-26
 
 1. ✅ **プロジェクト戦略の完全見直し**
