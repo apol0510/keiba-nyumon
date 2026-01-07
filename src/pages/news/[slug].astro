@@ -84,6 +84,17 @@ const breadcrumbStructuredData = {
   ]
 };
 
+// SEO最適化されたalt属性
+const categoryMap: Record<string, string> = {
+  'kiso': '競馬の基礎知識',
+  'baken': '馬券の買い方',
+  'yougo': '競馬用語集',
+  'nankan': '南関競馬入門',
+  'data': 'データ予想入門'
+};
+const categoryLabel = categoryMap[article.category] || article.category;
+const optimizedAlt = `${categoryLabel}: ${article.title} - 競馬初心者向け詳細解説記事`;
+
 // Markdownを簡易的にHTMLに変換
 function markdownToHtml(markdown: string): string {
   return markdown
@@ -160,7 +171,7 @@ const htmlContent = markdownToHtml(article.content);
       <div class="article-thumbnail">
         <img
           src={article.thumbnail}
-          alt={article.title}
+          alt={optimizedAlt}
           width="1200"
           height="675"
           loading="eager"

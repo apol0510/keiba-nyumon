@@ -43,6 +43,17 @@ const badgeColors: Record<string, string> = {
 
 const badgeClass = badgeColors[category] || 'badge-default';
 const formattedViews = formatViewCount(viewCount);
+
+// SEO最適化されたalt属性（カテゴリ + タイトル + 競馬キーワード）
+const categoryMap: Record<string, string> = {
+  'kiso': '競馬の基礎知識',
+  'baken': '馬券の買い方',
+  'yougo': '競馬用語集',
+  'nankan': '南関競馬入門',
+  'data': 'データ予想入門'
+};
+const categoryLabel = categoryMap[category] || category;
+const optimizedAlt = `${categoryLabel}: ${title} - 競馬初心者向け解説記事のサムネイル画像`;
 ---
 
 <article class={`news-card ${isFeatured ? 'featured' : ''}`}>
@@ -53,7 +64,7 @@ const formattedViews = formatViewCount(viewCount);
       <div class="thumbnail-container">
         <img
           src={thumbnail}
-          alt={title}
+          alt={optimizedAlt}
           loading="lazy"
           decoding="async"
           class="thumbnail-image"
