@@ -868,6 +868,80 @@ npm run build
      - エンゲージメント: +20%（読了時間による期待値設定）
      - ページ/セッション: +10%（スクロールトップボタンによる回遊促進）
 
+11. ✅ **GA4カスタムイベント・OGP・PWA対応完了（フルスタック最適化）**
+   - **背景**: ユーザー行動分析の強化、SNS共有最適化、PWA対応によるユーザー体験の総合的改善
+   - **実装内容**:
+
+     **A. GA4カスタムイベント（ユーザー行動の詳細分析）**
+     - **検索イベント**: 検索クエリ、検索結果数を記録
+     - **記事クリックイベント**: 検索結果からの記事選択を追跡（`select_content`）
+     - **スクロール深度トラッキング**: 25%, 50%, 75%, 100% の到達時にイベント送信
+     - **外部リンククリック**: 外部サイトへの遷移を記録（`event_category: 'outbound'`）
+     - `src/pages/search.astro`: sendGA4Event()関数、attachArticleClickEvents()関数
+     - `src/layouts/BaseLayout.astro`: trackScrollDepth()関数、外部リンククリック検出
+
+     **B. OGP画像最適化（SNS共有クリック率向上）**
+     - **デフォルトOGP画像生成**（1200x630px、48.21KB）
+       - スカイブルーグラデーション背景
+       - 「競馬入門ガイド」タイトル + サイトURL
+       - 装飾用図形（左右に円形）
+     - **カテゴリ別OGP画像生成**（5種類）:
+       - kiso（競馬の基礎知識）: #0ea5e9、📚
+       - baken（馬券の買い方）: #10b981、🎫
+       - yougo（競馬用語集）: #f59e0b、📖
+       - nankan（南関競馬入門）: #8b5cf6、🏇
+       - data（データ予想入門）: #ef4444、📊
+     - **記事詳細ページのOGP最適化**: カテゴリ別画像を自動選択（thumbnailがある場合はそれを優先）
+     - `scripts/generate-ogp-default.cjs`: デフォルト画像生成スクリプト
+     - `scripts/generate-ogp-categories.cjs`: カテゴリ別画像生成スクリプト
+     - `@napi-rs/canvas` パッケージをインストール
+
+     **C. PWA対応（ホーム画面追加、オフライン閲覧）**
+     - **manifest.json作成**:
+       - name: 「競馬入門ガイド」
+       - short_name: 「競馬入門」
+       - theme_color: #38bdf8
+       - display: standalone
+       - 8サイズのアイコン（72x72 〜 512x512）
+       - categories: sports, education, lifestyle
+     - **PWAアイコン生成**（8種類）:
+       - 「競馬」テキスト + スカイブルーグラデーション
+       - maskable対応（角丸）
+       - 合計サイズ: 約40KB
+     - **Service Worker実装**（sw.js）:
+       - Network-First戦略（常に最新コンテンツを優先）
+       - オフライン時はキャッシュから取得
+       - 静的アセットの事前キャッシュ
+       - バックグラウンド同期対応（将来的拡張用）
+       - プッシュ通知対応（将来的拡張用）
+     - **BaseLayout統合**:
+       - manifest linkタグ追加
+       - Apple Touch Icon対応
+       - Service Worker自動登録スクリプト
+       - theme-color メタタグ
+
+   - **依存関係**: `@napi-rs/canvas` をインストール（devDependencies）
+   - **生成ファイル**:
+     - public/og/: default.png + 5カテゴリ画像（合計6枚）
+     - public/icons/: 8サイズのPWAアイコン
+     - public/manifest.json
+     - public/sw.js
+     - scripts/generate-ogp-default.cjs
+     - scripts/generate-ogp-categories.cjs
+     - scripts/generate-pwa-icons.cjs
+
+   - **ビルド結果**: 114ページ（変更なし）
+   - **デプロイ**: 2026-01-07 18:32 JST（本番環境: https://keiba-nyumon.jp）
+   - **commit**: 00f2624（GA4）、f22a1a0（OGP）、b5b4886（PWA）
+
+   - **期待効果（1-3ヶ月後）**:
+     - **GA4分析**: ユーザー行動の詳細把握、改善点の定量的発見
+     - **SNS共有**: クリック率+20-30%（OGP画像最適化）
+     - **PWA**: リピート率+15%（ホーム画面追加ユーザー）
+     - **オフライン**: ユーザー満足度向上、キャッシュによる高速化
+     - **検索順位**: Google PWA評価による順位向上
+     - **モバイルUX**: ネイティブアプリに近い体験
+
 ### 2025-12-26
 
 1. ✅ **プロジェクト戦略の完全見直し**
