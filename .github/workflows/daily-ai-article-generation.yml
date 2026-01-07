@@ -51,19 +51,11 @@ jobs:
           ARTICLE_COUNT: ${{ inputs.article_count || '3' }}
         run: node --no-warnings scripts/generate-ai-news.cjs
 
-      - name: Deploy to Netlify (optional)
+      - name: Trigger Netlify Build via Build Hook
         if: success()
-        env:
-          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
-          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
-          KEIBA_NYUMON_AIRTABLE_API_KEY: ${{ secrets.KEIBA_NYUMON_AIRTABLE_API_KEY }}
-          KEIBA_NYUMON_AIRTABLE_BASE_ID: ${{ secrets.KEIBA_NYUMON_AIRTABLE_BASE_ID }}
-          AIRTABLE_API_KEY: ${{ secrets.AIRTABLE_API_KEY }}
-          AIRTABLE_BASE_ID: ${{ secrets.AIRTABLE_BASE_ID }}
         run: |
-          npm install -g netlify-cli
-          npm run build
-          netlify deploy --prod --dir=dist --message "Auto: Daily AI articles generated"
+          curl -X POST -d '{}' ${{ secrets.NETLIFY_BUILD_HOOK_URL }}
+          echo "✅ Netlify Build Hook triggered"
         continue-on-error: true
 
       - name: Summary
