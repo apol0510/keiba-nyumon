@@ -17,13 +17,36 @@ export async function getStaticPaths() {
 const { slug } = Astro.params;
 const { article } = Astro.props;
 
-// 関連記事を取得
+// 関連記事を取得（改善版: タグベースの関連度スコアリング）
 let relatedArticles = [];
 try {
-  const allArticles = await getLatestNews(10);
-  relatedArticles = allArticles
-    .filter(a => a.slug !== slug && a.category === article.category)
-    .slice(0, 3);
+  const allArticles = await getLatestNews(50);
+
+  // 関連度スコアを計算
+  const scoredArticles = allArticles
+    .filter(a => a.slug !== slug)
+    .map(a => {
+      let score = 0;
+
+      // 同じカテゴリ: +10点
+      if (a.category === article.category) {
+        score += 10;
+      }
+
+      // タグの一致数でスコア加算: 各+5点
+      const currentTags = article.tags || [];
+      const otherTags = a.tags || [];
+      const matchingTags = currentTags.filter(tag => otherTags.includes(tag));
+      score += matchingTags.length * 5;
+
+      return { article: a, score };
+    })
+    .filter(item => item.score > 0) // スコア0のものは除外
+    .sort((a, b) => b.score - a.score) // スコア降順
+    .slice(0, 4) // トップ4を取得
+    .map(item => item.article);
+
+  relatedArticles = scoredArticles;
 } catch (error) {
   console.warn('関連記事の取得に失敗しました');
 }
