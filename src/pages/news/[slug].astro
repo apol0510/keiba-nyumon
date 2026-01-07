@@ -32,7 +32,7 @@ try {
 const siteUrl = config.domain ? `https://${config.domain}` : 'https://keiba-nyumon.jp';
 const articleUrl = `${siteUrl}/news/${slug}/`;
 
-// NewsArticle構造化データ
+// NewsArticle構造化データ（SEO最適化: 更新日対応）
 const structuredData = {
   '@context': 'https://schema.org',
   '@type': 'NewsArticle',
@@ -41,7 +41,7 @@ const structuredData = {
   image: article.thumbnail || `${siteUrl}/og-image.png`,
   url: articleUrl,
   datePublished: new Date(article.publishedAt).toISOString(),
-  dateModified: new Date(article.publishedAt).toISOString(),
+  dateModified: article.updatedAt ? new Date(article.updatedAt).toISOString() : new Date(article.publishedAt).toISOString(),
   author: {
     '@type': 'Person',
     name: article.author || 'AI編集部',
@@ -149,6 +149,7 @@ const htmlContent = markdownToHtml(article.content);
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
           </svg>
+          <span class="info-label">公開:</span>
           <time datetime={new Date(article.publishedAt).toISOString()}>
             {new Date(article.publishedAt).toLocaleDateString('ja-JP', {
               year: 'numeric',
@@ -157,6 +158,21 @@ const htmlContent = markdownToHtml(article.content);
             })}
           </time>
         </div>
+        {article.updatedAt && (
+          <div class="info-item updated">
+            <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+            </svg>
+            <span class="info-label">更新:</span>
+            <time datetime={new Date(article.updatedAt).toISOString()}>
+              {new Date(article.updatedAt).toLocaleDateString('ja-JP', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              })}
+            </time>
+          </div>
+        )}
         <div class="info-item">
           <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
@@ -350,12 +366,23 @@ const htmlContent = markdownToHtml(article.content);
     gap: 1.5rem;
     font-size: 0.875rem;
     color: #6b7280;
+    flex-wrap: wrap;
   }
 
   .info-item {
     display: flex;
     align-items: center;
     gap: 0.5rem;
+  }
+
+  .info-item.updated {
+    color: #059669;
+    font-weight: 500;
+  }
+
+  .info-label {
+    font-weight: 600;
+    color: #4b5563;
   }
 
   .icon {

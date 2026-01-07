@@ -30,6 +30,7 @@ export interface NewsArticle {
   excerpt: string;
   content?: string;
   publishedAt: Date;
+  updatedAt?: Date; // 記事更新日（SEO最適化）
   viewCount: number;
   isFeatured: boolean;
   tags: string[];
@@ -65,6 +66,7 @@ function recordToArticle(record: any): NewsArticle {
     excerpt: fields.Excerpt || '',
     content: fields.Content || '',
     publishedAt: fields.PublishedAt ? new Date(fields.PublishedAt) : new Date(),
+    updatedAt: fields.UpdatedAt ? new Date(fields.UpdatedAt) : undefined, // 更新日（オプション）
     viewCount: fields.ViewCount || 0,
     isFeatured: fields.IsFeatured || false,
     tags: fields.Tags || [],
