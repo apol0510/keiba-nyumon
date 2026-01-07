@@ -148,11 +148,22 @@ function markdownToHtml(markdown: string): string {
 }
 
 const htmlContent = markdownToHtml(article.content);
+
+// カテゴリ別OGP画像の設定
+const categoryOgImages = {
+  'kiso': '/og/kiso.png',
+  'baken': '/og/baken.png',
+  'yougo': '/og/yougo.png',
+  'nankan': '/og/nankan.png',
+  'data': '/og/data.png',
+};
+const ogImage = article.thumbnail || categoryOgImages[article.category] || '/og/default.png';
 ---
 
 <BaseLayout
   title={`${article.title} | ${config.name}`}
   description={article.excerpt}
+  ogImage={ogImage}
 >
   <!-- 構造化データ: NewsArticle -->
   <script type="application/ld+json" set:html={JSON.stringify(structuredData)} />
