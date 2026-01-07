@@ -96,6 +96,9 @@ const ga4MeasurementId = config.analytics.ga4MeasurementId;
     <title>{fullTitle}</title>
   </head>
   <body class="min-h-screen flex flex-col">
+    <!-- 読み進め進捗バー -->
+    <div id="reading-progress" class="reading-progress"></div>
+
     <!-- Header -->
     <header class="bg-white border-b border-gray-200 sticky top-0 z-50">
       <div class="max-w-7xl mx-auto px-4">
@@ -236,6 +239,78 @@ const ga4MeasurementId = config.analytics.ga4MeasurementId;
       </div>
     </footer>
 
+    <!-- スクロールトップボタン -->
+    <button id="scroll-to-top" class="scroll-to-top" aria-label="ページトップへ戻る">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+      </svg>
+    </button>
+
+    <style>
+      /* 読み進め進捗バー */
+      .reading-progress {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 3px;
+        background: linear-gradient(90deg, #38bdf8, #0ea5e9);
+        width: 0%;
+        z-index: 9999;
+        transition: width 0.1s ease-out;
+      }
+
+      /* スクロールトップボタン */
+      .scroll-to-top {
+        position: fixed;
+        bottom: 2rem;
+        right: 2rem;
+        width: 3rem;
+        height: 3rem;
+        background: linear-gradient(135deg, #38bdf8, #0ea5e9);
+        color: white;
+        border: none;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        opacity: 0;
+        visibility: hidden;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(56, 189, 248, 0.4);
+        z-index: 1000;
+      }
+
+      .scroll-to-top.visible {
+        opacity: 1;
+        visibility: visible;
+      }
+
+      .scroll-to-top:hover {
+        transform: translateY(-4px);
+        box-shadow: 0 8px 20px rgba(56, 189, 248, 0.5);
+      }
+
+      .scroll-to-top svg {
+        width: 1.5rem;
+        height: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .scroll-to-top {
+          bottom: 1rem;
+          right: 1rem;
+          width: 2.5rem;
+          height: 2.5rem;
+        }
+
+        .scroll-to-top svg {
+          width: 1.25rem;
+          height: 1.25rem;
+        }
+      }
+    </style>
+
     <script>
       // Mobile menu toggle
       const menuButton = document.getElementById('mobile-menu-button');
@@ -244,6 +319,65 @@ const ga4MeasurementId = config.analytics.ga4MeasurementId;
       menuButton?.addEventListener('click', () => {
         mobileMenu?.classList.toggle('hidden');
       });
+
+      // 読み進め進捗バー
+      const progressBar = document.getElementById('reading-progress');
+
+      function updateProgress() {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        // スクロール可能な距離を計算
+        const scrollableDistance = documentHeight - windowHeight;
+
+        // 進捗率を計算（0-100%）
+        const progress = scrollableDistance > 0 ? (scrollTop / scrollableDistance) * 100 : 0;
+
+        if (progressBar) {
+          progressBar.style.width = `${Math.min(progress, 100)}%`;
+        }
+      }
+
+      // スクロールトップボタン
+      const scrollToTopBtn = document.getElementById('scroll-to-top');
+
+      function updateScrollToTopButton() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+
+        if (scrollToTopBtn) {
+          if (scrollTop > 300) {
+            scrollToTopBtn.classList.add('visible');
+          } else {
+            scrollToTopBtn.classList.remove('visible');
+          }
+        }
+      }
+
+      scrollToTopBtn?.addEventListener('click', () => {
+        window.scrollTo({
+          top: 0,
+          behavior: 'smooth'
+        });
+      });
+
+      // スクロールイベント（パフォーマンス最適化のためthrottle）
+      let ticking = false;
+
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            updateProgress();
+            updateScrollToTopButton();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      // 初期実行
+      updateProgress();
+      updateScrollToTopButton();
     </script>
   </body>
 </html>

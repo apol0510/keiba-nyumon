@@ -118,6 +118,21 @@ const categoryMap: Record<string, string> = {
 const categoryLabel = categoryMap[article.category] || article.category;
 const optimizedAlt = `${categoryLabel}: ${article.title} - 競馬初心者向け詳細解説記事`;
 
+// 推定読了時間を計算（日本語は500文字/分）
+function calculateReadingTime(content: string): number {
+  const plainText = content
+    .replace(/<[^>]*>/g, '') // HTMLタグを削除
+    .replace(/\s+/g, '') // 空白を削除
+    .trim();
+
+  const charCount = plainText.length;
+  const readingTimeMinutes = Math.ceil(charCount / 500); // 500文字/分
+
+  return Math.max(1, readingTimeMinutes); // 最低1分
+}
+
+const readingTime = calculateReadingTime(article.content || '');
+
 // Markdownを簡易的にHTMLに変換
 function markdownToHtml(markdown: string): string {
   return markdown
@@ -201,6 +216,12 @@ const htmlContent = markdownToHtml(article.content);
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
           </svg>
           <span>{article.author || 'AI編集部'}</span>
+        </div>
+        <div class="info-item reading-time">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+          </svg>
+          <span>約 {readingTime} 分</span>
         </div>
       </div>
     </header>
@@ -401,6 +422,14 @@ const htmlContent = markdownToHtml(article.content);
   .info-item.updated {
     color: #059669;
     font-weight: 500;
+  }
+
+  .info-item.reading-time {
+    color: #0ea5e9;
+    font-weight: 500;
+    background: rgba(14, 165, 233, 0.1);
+    padding: 0.25rem 0.75rem;
+    border-radius: 6px;
   }
 
   .info-label {
