@@ -1,0 +1,300 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import NewsCard from '../../components/NewsCard.astro';
+import { getAllNews } from '../../lib/news';
+import { config } from '../../config';
+
+// 動的ルーティング用
+export async function getStaticPaths() {
+  return [
+    { params: { category: 'kiso' } },
+    { params: { category: 'baken' } },
+    { params: { category: 'yougo' } },
+    { params: { category: 'nankan' } },
+    { params: { category: 'data' } }
+  ];
+}
+
+const { category } = Astro.params;
+
+// カテゴリ情報
+const categoryInfo: Record<string, { name: string; description: string; icon: string }> = {
+  kiso: {
+    name: '競馬の基礎知識',
+    description: '競馬の始め方、レースの種類、競馬場の楽しみ方など、初心者が知っておくべき基本的な情報をわかりやすく解説します。',
+    icon: '📚'
+  },
+  baken: {
+    name: '馬券の買い方',
+    description: '単勝・複勝から三連単まで、馬券の種類と買い方、予算の決め方、的中率を上げるコツを初心者向けに解説します。',
+    icon: '🎫'
+  },
+  yougo: {
+    name: '競馬用語集',
+    description: '競馬でよく使われる専門用語を初心者にもわかりやすく解説。レース観戦や馬券購入に役立つ知識が身につきます。',
+    icon: '📖'
+  },
+  nankan: {
+    name: '南関競馬入門',
+    description: '大井・船橋・川崎・浦和の南関東4競馬場について、ナイター競馬の楽しみ方や重賞レースを初心者向けに解説します。',
+    icon: '🏇'
+  },
+  data: {
+    name: 'データ予想入門',
+    description: 'オッズ分析や血統データ、過去の成績など、データを活用した競馬予想の基本を初心者にもわかりやすく解説します。',
+    icon: '📊'
+  }
+};
+
+const currentCategory = categoryInfo[category];
+
+// カテゴリの記事を取得
+let articles = [];
+try {
+  const allArticles = await getAllNews();
+  articles = allArticles.filter(article => article.category === category);
+} catch (error) {
+  console.warn(`カテゴリ ${category} の記事取得に失敗しました`);
+}
+
+// SEO用
+const siteUrl = config.domain ? `https://${config.domain}` : 'https://keiba-nyumon.jp';
+const categoryUrl = `${siteUrl}/category/${category}/`;
+
+// BreadcrumbList構造化データ
+const breadcrumbStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'BreadcrumbList',
+  itemListElement: [
+    {
+      '@type': 'ListItem',
+      position: 1,
+      name: 'ホーム',
+      item: `${siteUrl}/`
+    },
+    {
+      '@type': 'ListItem',
+      position: 2,
+      name: currentCategory.name,
+      item: categoryUrl
+    }
+  ]
+};
+---
+
+<BaseLayout
+  title={`${currentCategory.name} | ${config.name}`}
+  description={currentCategory.description}
+>
+  <!-- 構造化データ: BreadcrumbList -->
+  <script type="application/ld+json" set:html={JSON.stringify(breadcrumbStructuredData)} />
+
+  <div class="category-page">
+    <!-- パンくずリスト -->
+    <nav class="breadcrumb">
+      <a href="/">ホーム</a>
+      <span class="separator">›</span>
+      <span class="current">{currentCategory.name}</span>
+    </nav>
+
+    <!-- カテゴリヘッダー -->
+    <header class="category-header">
+      <div class="category-icon">{currentCategory.icon}</div>
+      <h1 class="category-title">{currentCategory.name}</h1>
+      <p class="category-description">{currentCategory.description}</p>
+      <div class="category-stats">
+        <span class="stat-item">
+          <svg class="icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 20H5a2 2 0 01-2-2V6a2 2 0 012-2h10a2 2 0 012 2v1m2 13a2 2 0 01-2-2V7m2 13a2 2 0 002-2V9a2 2 0 00-2-2h-2m-4-3H9M7 16h6M7 8h6v4H7V8z" />
+          </svg>
+          {articles.length}記事
+        </span>
+      </div>
+    </header>
+
+    <!-- 記事一覧 -->
+    {articles.length > 0 ? (
+      <div class="articles-grid">
+        {articles.map((article) => (
+          <NewsCard
+            title={article.title}
+            slug={article.slug}
+            category={article.category}
+            excerpt={article.excerpt}
+            publishedAt={new Date(article.publishedAt)}
+            viewCount={article.viewCount}
+            thumbnail={article.thumbnail}
+            tags={article.tags}
+          />
+        ))}
+      </div>
+    ) : (
+      <div class="no-articles">
+        <svg class="icon-large" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+        </svg>
+        <p>このカテゴリの記事はまだありません</p>
+        <a href="/" class="back-link">トップページへ戻る</a>
+      </div>
+    )}
+  </div>
+</BaseLayout>
+
+<style>
+  .category-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+  }
+
+  .breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 2rem;
+  }
+
+  .breadcrumb a {
+    color: #42a5f5;
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  .breadcrumb a:hover {
+    color: #1e88e5;
+  }
+
+  .separator {
+    color: #d1d5db;
+  }
+
+  .current {
+    color: #111827;
+    font-weight: 500;
+  }
+
+  .category-header {
+    text-align: center;
+    margin-bottom: 3rem;
+    padding: 3rem 2rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 24px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.1);
+  }
+
+  .category-icon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .category-title {
+    font-size: 2.5rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 1rem 0;
+  }
+
+  .category-description {
+    font-size: 1.125rem;
+    color: #6b7280;
+    max-width: 600px;
+    margin: 0 auto 1.5rem;
+    line-height: 1.6;
+  }
+
+  .category-stats {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+  }
+
+  .stat-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+    font-weight: 600;
+  }
+
+  .icon {
+    width: 20px;
+    height: 20px;
+  }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 2rem;
+  }
+
+  .no-articles {
+    text-align: center;
+    padding: 4rem 2rem;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 16px;
+    border: 1px solid rgba(56, 189, 248, 0.2);
+  }
+
+  .icon-large {
+    width: 64px;
+    height: 64px;
+    margin: 0 auto 1.5rem;
+    color: #9ca3af;
+  }
+
+  .no-articles p {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .back-link {
+    display: inline-block;
+    padding: 0.75rem 1.5rem;
+    background: #42a5f5;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s;
+  }
+
+  .back-link:hover {
+    background: #1e88e5;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(66, 165, 245, 0.3);
+  }
+
+  @media (max-width: 768px) {
+    .category-page {
+      padding: 1rem;
+    }
+
+    .category-header {
+      padding: 2rem 1rem;
+    }
+
+    .category-icon {
+      font-size: 3rem;
+    }
+
+    .category-title {
+      font-size: 1.75rem;
+    }
+
+    .category-description {
+      font-size: 1rem;
+    }
+
+    .articles-grid {
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+  }
+</style>
