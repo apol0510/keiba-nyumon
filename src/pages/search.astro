@@ -222,6 +222,13 @@ const breadcrumbStructuredData = {
       clearBtn.style.display = 'block';
     }
 
+    // GA4イベント送信
+    function sendGA4Event(eventName, eventParams) {
+      if (typeof gtag === 'function') {
+        gtag('event', eventName, eventParams);
+      }
+    }
+
     // 検索実行
     function performSearch(query) {
       if (!query || query.trim() === '') {
@@ -232,6 +239,12 @@ const breadcrumbStructuredData = {
 
       const results = fuse.search(query);
       displayResults(results, query);
+
+      // GA4イベント送信（検索実行）
+      sendGA4Event('search', {
+        search_term: query,
+        search_results: results.length
+      });
     }
 
     // 全記事を表示
@@ -256,6 +269,9 @@ const breadcrumbStructuredData = {
       `).join('');
 
       searchResults.innerHTML = `<div class="results-grid">${html}</div>`;
+
+      // 記事クリックイベント（GA4）
+      attachArticleClickEvents();
     }
 
     // 検索結果を表示
@@ -291,6 +307,27 @@ const breadcrumbStructuredData = {
       }).join('');
 
       searchResults.innerHTML = `<div class="results-grid">${html}</div>`;
+
+      // 記事クリックイベント（GA4）
+      attachArticleClickEvents();
+    }
+
+    // 記事クリックイベントリスナーを追加
+    function attachArticleClickEvents() {
+      const articleLinks = document.querySelectorAll('.result-card');
+      articleLinks.forEach(link => {
+        link.addEventListener('click', (e) => {
+          const title = link.querySelector('.result-title')?.textContent || '';
+          const category = link.querySelector('.result-category')?.textContent || '';
+
+          sendGA4Event('select_content', {
+            content_type: 'article',
+            item_id: link.getAttribute('href'),
+            item_name: title,
+            item_category: category
+          });
+        });
+      });
     }
 
     // 検索入力イベント

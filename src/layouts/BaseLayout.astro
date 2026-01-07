@@ -378,6 +378,67 @@ const ga4MeasurementId = config.analytics.ga4MeasurementId;
       // 初期実行
       updateProgress();
       updateScrollToTopButton();
+
+      // GA4: スクロール深度トラッキング
+      const scrollDepths = [25, 50, 75, 100];
+      const triggeredDepths = new Set();
+
+      function trackScrollDepth() {
+        const windowHeight = window.innerHeight;
+        const documentHeight = document.documentElement.scrollHeight;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        const scrollableDistance = documentHeight - windowHeight;
+
+        if (scrollableDistance > 0) {
+          const scrollPercent = (scrollTop / scrollableDistance) * 100;
+
+          scrollDepths.forEach(depth => {
+            if (scrollPercent >= depth && !triggeredDepths.has(depth)) {
+              triggeredDepths.add(depth);
+
+              // GA4イベント送信
+              if (typeof gtag === 'function') {
+                gtag('event', 'scroll', {
+                  percent_scrolled: depth
+                });
+              }
+            }
+          });
+        }
+      }
+
+      // スクロール深度トラッキングをスクロールイベントに追加
+      window.addEventListener('scroll', () => {
+        if (!ticking) {
+          window.requestAnimationFrame(() => {
+            updateProgress();
+            updateScrollToTopButton();
+            trackScrollDepth();
+            ticking = false;
+          });
+          ticking = true;
+        }
+      });
+
+      // GA4: 外部リンククリックトラッキング
+      document.addEventListener('click', (e) => {
+        const target = e.target.closest('a');
+        if (!target) return;
+
+        const href = target.getAttribute('href');
+        if (!href) return;
+
+        // 外部リンクの判定（http/https で始まり、現在のドメイン以外）
+        const isExternal = href.startsWith('http') && !href.includes(window.location.hostname);
+
+        if (isExternal && typeof gtag === 'function') {
+          gtag('event', 'click', {
+            event_category: 'outbound',
+            event_label: href,
+            transport_type: 'beacon'
+          });
+        }
+      });
     </script>
   </body>
 </html>
