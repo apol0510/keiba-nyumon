@@ -1,0 +1,52 @@
+# X（旧Twitter）自動投稿ワークフロー
+# 毎日1回、未投稿の記事をXに自動投稿
+
+name: Post to X (Twitter)
+
+on:
+  schedule:
+    # 毎日午前9時（JST）に実行（UTC 0:00 = JST 9:00）
+    - cron: '0 0 * * *'
+
+  # 手動実行も可能
+  workflow_dispatch:
+
+jobs:
+  post-to-x:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Post to X
+        env:
+          # Airtable
+          KEIBA_NYUMON_AIRTABLE_API_KEY: ${{ secrets.KEIBA_NYUMON_AIRTABLE_API_KEY }}
+          KEIBA_NYUMON_AIRTABLE_BASE_ID: ${{ secrets.KEIBA_NYUMON_AIRTABLE_BASE_ID }}
+
+          # X API
+          X_API_KEY: ${{ secrets.X_API_KEY }}
+          X_API_SECRET: ${{ secrets.X_API_SECRET }}
+          X_ACCESS_TOKEN: ${{ secrets.X_ACCESS_TOKEN }}
+          X_ACCESS_SECRET: ${{ secrets.X_ACCESS_SECRET }}
+
+          # サイトURL
+          SITE_URL: https://keiba-nyumon.jp
+        run: npm run post:x
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ X投稿に失敗しました"
+          echo "エラーログを確認してください"
