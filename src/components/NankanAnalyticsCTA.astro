@@ -1,0 +1,194 @@
+---
+/**
+ * NANKANアナリティクスへの導線CTA
+ * 南関競馬・データ予想関連記事に表示
+ */
+
+interface Props {
+  variant?: 'nankan' | 'data';
+}
+
+const { variant = 'nankan' } = Astro.props;
+
+const content = {
+  nankan: {
+    emoji: '🤖',
+    title: '南関競馬のAI予想に興味がある方へ',
+    description: 'NANKANアナリティクスでは、機械学習を使った南関競馬の予想を公開中！',
+    features: [
+      '大井・川崎・船橋・浦和の全レース対応',
+      'AI予想アルゴリズムの解説記事',
+      '過去の的中実績公開',
+    ],
+    buttonText: 'NANKANアナリティクスを見る',
+  },
+  data: {
+    emoji: '📊',
+    title: 'データ予想を本格的に学びたい方へ',
+    description: 'NANKANアナリティクスでは、AI・機械学習による競馬予想の技術を詳しく解説！',
+    features: [
+      '機械学習アルゴリズムの実装例',
+      'Pythonコードで学ぶデータ分析',
+      '予想モデルの精度検証方法',
+    ],
+    buttonText: '技術ブログを読む',
+  },
+};
+
+const { emoji, title, description, features, buttonText } = content[variant];
+---
+
+<aside class="nankan-cta" data-cta-type={variant}>
+  <div class="nankan-cta__container">
+    <div class="nankan-cta__icon">{emoji}</div>
+    <div class="nankan-cta__content">
+      <h3 class="nankan-cta__title">{title}</h3>
+      <p class="nankan-cta__description">{description}</p>
+      <ul class="nankan-cta__features">
+        {features.map((feature) => (
+          <li>✅ {feature}</li>
+        ))}
+      </ul>
+      <a
+        href="https://nankan-analytics.keiba.link"
+        target="_blank"
+        rel="noopener noreferrer"
+        class="nankan-cta__button"
+        data-analytics-event="click_nankan_cta"
+        data-analytics-label={variant}
+      >
+        {buttonText} →
+      </a>
+    </div>
+  </div>
+</aside>
+
+<style>
+  .nankan-cta {
+    margin: 3rem 0;
+    padding: 2rem;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+    color: white;
+  }
+
+  .nankan-cta__container {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  .nankan-cta__icon {
+    font-size: 3rem;
+    flex-shrink: 0;
+    animation: bounce 2s infinite;
+  }
+
+  @keyframes bounce {
+    0%, 100% {
+      transform: translateY(0);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+  }
+
+  .nankan-cta__content {
+    flex: 1;
+  }
+
+  .nankan-cta__title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 0 0 0.75rem;
+    color: white;
+  }
+
+  .nankan-cta__description {
+    margin: 0 0 1rem;
+    opacity: 0.95;
+    line-height: 1.6;
+  }
+
+  .nankan-cta__features {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 1.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .nankan-cta__features li {
+    opacity: 0.95;
+    line-height: 1.5;
+  }
+
+  .nankan-cta__button {
+    display: inline-block;
+    padding: 0.875rem 2rem;
+    background: white;
+    color: #667eea;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+  }
+
+  .nankan-cta__button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.3);
+    background: #f8f9fa;
+  }
+
+  @media (max-width: 768px) {
+    .nankan-cta {
+      padding: 1.5rem;
+    }
+
+    .nankan-cta__container {
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .nankan-cta__icon {
+      font-size: 2.5rem;
+    }
+
+    .nankan-cta__title {
+      font-size: 1.25rem;
+    }
+
+    .nankan-cta__button {
+      width: 100%;
+      text-align: center;
+    }
+  }
+</style>
+
+<script>
+  // GA4イベント送信（クリック追跡）
+  document.addEventListener('DOMContentLoaded', () => {
+    const ctaButtons = document.querySelectorAll('[data-analytics-event="click_nankan_cta"]');
+
+    ctaButtons.forEach((button) => {
+      button.addEventListener('click', () => {
+        const label = button.getAttribute('data-analytics-label') || 'unknown';
+
+        // Google Analytics 4
+        if (typeof gtag !== 'undefined') {
+          gtag('event', 'click_nankan_cta', {
+            event_category: 'CTA',
+            event_label: label,
+            value: 1,
+          });
+        }
+
+        // コンソールログ（デバッグ用）
+        console.log('CTA clicked:', label);
+      });
+    });
+  });
+</script>
