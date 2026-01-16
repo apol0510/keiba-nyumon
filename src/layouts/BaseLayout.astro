@@ -6,12 +6,14 @@ interface Props {
   title: string;
   description?: string;
   ogImage?: string;
+  noindex?: boolean;
 }
 
 const {
   title,
   description = '競馬初心者のための入門ガイド。競馬の始め方、馬券の買い方、用語解説、南関競馬、データ予想の基礎知識をわかりやすく解説します。',
   ogImage = '/og/default.png',
+  noindex = false,
 } = Astro.props;
 
 const siteTitle = '競馬入門ガイド';
@@ -31,6 +33,7 @@ const ga4MeasurementId = config.analytics.ga4MeasurementId;
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="description" content={description} />
     <meta name="generator" content={Astro.generator} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
 
     <!-- Google Search Console Verification -->
     <meta name="google-site-verification" content="itnt-HD7qr-LI7xBwPHIS_SV56pxCXFwix95Iw_63tQ" />

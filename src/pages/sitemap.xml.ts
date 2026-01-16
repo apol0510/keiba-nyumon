@@ -5,8 +5,8 @@ import { getLatestNews } from '../lib/news';
 const SITE_URL = 'https://keiba-nyumon.jp';
 
 export const GET: APIRoute = async () => {
-  // ニュース記事を取得（最大100件）
-  const articles = await getLatestNews(100);
+  // ニュース記事を取得（全件）
+  const articles = await getLatestNews(200);
 
   // 静的ページ
   const staticPages = [
@@ -15,12 +15,32 @@ export const GET: APIRoute = async () => {
     { url: '/terms/', priority: '0.3', changefreq: 'yearly' },
     { url: '/privacy/', priority: '0.3', changefreq: 'yearly' },
     { url: '/contact/', priority: '0.5', changefreq: 'monthly' },
+    { url: '/faq/', priority: '0.6', changefreq: 'monthly' },
+    { url: '/search/', priority: '0.4', changefreq: 'weekly' },
+  ];
+
+  // カテゴリページ
+  const categoryPages = [
+    { url: '/category/kiso/', priority: '0.7', changefreq: 'weekly' },
+    { url: '/category/baken/', priority: '0.7', changefreq: 'weekly' },
+    { url: '/category/yougo/', priority: '0.7', changefreq: 'weekly' },
+    { url: '/category/nankan/', priority: '0.7', changefreq: 'weekly' },
+    { url: '/category/data/', priority: '0.7', changefreq: 'weekly' },
   ];
 
   // XMLを生成
   const xml = `<?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
 ${staticPages
+  .map(
+    (page) => `  <url>
+    <loc>${SITE_URL}${page.url}</loc>
+    <changefreq>${page.changefreq}</changefreq>
+    <priority>${page.priority}</priority>
+  </url>`
+  )
+  .join('\n')}
+${categoryPages
   .map(
     (page) => `  <url>
     <loc>${SITE_URL}${page.url}</loc>

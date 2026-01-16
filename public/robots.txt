@@ -2,9 +2,7 @@
 
 User-agent: *
 Allow: /
+Disallow: /debug
 
 # サイトマップ
 Sitemap: https://keiba-nyumon.jp/sitemap.xml
-
-# クロール速度調整（Googlebotなど）
-Crawl-delay: 1
