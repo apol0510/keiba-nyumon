@@ -129,31 +129,19 @@ async function downloadImage(url, filepath) {
 }
 
 /**
- * Xに投稿（画像付き）
+ * Xに投稿（テキストのみ - X API Free tier対応）
+ *
+ * 注: X API Free tierでは画像付き投稿が不可（402 Payment Required）
+ * 画像投稿を利用する場合はBasic tier ($100/月) 以上が必要
  */
 async function postToX(news) {
   try {
     const tweetText = generateTweetText(news);
     console.log(`\n📝 投稿内容:\n${tweetText}\n`);
 
-    // サムネイル画像をダウンロード
-    const imageUrl = news.ThumbnailUrl || `${SITE_URL}/og/default.png`;
-    const tempImagePath = path.join('/tmp', `keiba-nyumon-${Date.now()}.jpg`);
-
-    console.log(`📥 画像をダウンロード中: ${imageUrl}`);
-    await downloadImage(imageUrl, tempImagePath);
-
-    // 画像をアップロード
-    console.log(`📤 画像をXにアップロード中...`);
-    const mediaId = await twitterClient.v1.uploadMedia(tempImagePath);
-
-    // ツイート投稿（画像付き）
-    const tweet = await twitterClient.v2.tweet(tweetText, {
-      media: { media_ids: [mediaId] }
-    });
-
-    // 一時ファイルを削除
-    fs.unlinkSync(tempImagePath);
+    // テキストのみで投稿（X API Free tier対応）
+    console.log(`📤 Xに投稿中（テキストのみ）...`);
+    const tweet = await twitterClient.v2.tweet(tweetText);
 
     console.log(`✅ Xに投稿しました: https://twitter.com/user/status/${tweet.data.id}`);
 
