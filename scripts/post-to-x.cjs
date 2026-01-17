@@ -129,19 +129,42 @@ async function downloadImage(url, filepath) {
 }
 
 /**
- * Xに投稿（テキストのみ - X API Free tier対応）
+ * Xに投稿（画像付き - X API Pay-Per-Use tier対応）
  *
- * 注: X API Free tierでは画像付き投稿が不可（402 Payment Required）
- * 画像投稿を利用する場合はBasic tier ($100/月) 以上が必要
+ * 従量課金プランでは画像付き投稿が可能
  */
 async function postToX(news) {
   try {
     const tweetText = generateTweetText(news);
     console.log(`\n📝 投稿内容:\n${tweetText}\n`);
 
-    // テキストのみで投稿（X API Free tier対応）
-    console.log(`📤 Xに投稿中（テキストのみ）...`);
-    const tweet = await twitterClient.v2.tweet(tweetText);
+    // 画像がある場合はダウンロードしてアップロード
+    let mediaId = null;
+    if (news.ThumbnailUrl) {
+      try {
+        console.log(`🖼️  画像をダウンロード中: ${news.ThumbnailUrl}`);
+        const tempImagePath = path.join(__dirname, 'temp_image.jpg');
+        await downloadImage(news.ThumbnailUrl, tempImagePath);
+
+        console.log(`📤 画像をXにアップロード中...`);
+        mediaId = await twitterClient.v1.uploadMedia(tempImagePath);
+
+        // 一時ファイルを削除
+        fs.unlinkSync(tempImagePath);
+        console.log(`✅ 画像をアップロードしました（Media ID: ${mediaId}）`);
+      } catch (imageError) {
+        console.warn(`⚠️  画像アップロードに失敗しました:`, imageError.message);
+        console.log(`ℹ️  テキストのみで投稿を続行します`);
+      }
+    }
+
+    // テキスト + 画像で投稿
+    console.log(`📤 Xに投稿中${mediaId ? '（画像付き）' : '（テキストのみ）'}...`);
+    const tweetPayload = { text: tweetText };
+    if (mediaId) {
+      tweetPayload.media = { media_ids: [mediaId] };
+    }
+    const tweet = await twitterClient.v2.tweet(tweetPayload);
 
     console.log(`✅ Xに投稿しました: https://twitter.com/user/status/${tweet.data.id}`);
 
