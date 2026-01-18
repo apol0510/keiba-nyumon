@@ -1,0 +1,317 @@
+---
+/**
+ * 関連サイトCTAコンポーネント
+ * カテゴリ別に最適な関連サイトへの誘導を表示
+ */
+
+interface Props {
+  category: string;
+}
+
+const { category } = Astro.props;
+
+// カテゴリ別の関連サイト設定
+const relatedSitesConfig = {
+  kiso: [
+    {
+      url: 'https://keiba-matome.jp',
+      icon: '📰',
+      title: '最新の競馬ニュースをチェック',
+      description: '中央競馬の最新ニュースとファンの反応をリアルタイムで確認',
+      badge: '2ch風まとめ'
+    },
+    {
+      url: 'https://yosou.keiba-matome.jp',
+      icon: '💬',
+      title: '競馬予想の議論をチェック',
+      description: '予想のコツや考え方をコミュニティで学ぼう',
+      badge: '予想まとめ'
+    }
+  ],
+  baken: [
+    {
+      url: 'https://yosou.keiba-matome.jp',
+      icon: '📊',
+      title: '競馬予想の最新議論',
+      description: '馬券の買い方や予想手法について活発に議論中',
+      badge: '予想まとめ'
+    },
+    {
+      url: 'https://nankan-analytics.com',
+      icon: '🤖',
+      title: 'AI予想を無料で試す',
+      description: '南関競馬特化のAI予想サービス。無料プランで今すぐ体験',
+      badge: 'AI予想',
+      primary: true
+    }
+  ],
+  yougo: [
+    {
+      url: 'https://keiba-matome.jp',
+      icon: '📰',
+      title: '用語が飛び交うニュース記事',
+      description: '実際の使われ方を確認して理解を深めよう',
+      badge: 'ニュースまとめ'
+    }
+  ],
+  nankan: [
+    {
+      url: 'https://chihou.keiba-matome.jp',
+      icon: '🏇',
+      title: '地方競馬の最新ニュース',
+      description: '南関東4場の最新情報とファンの反応をチェック',
+      badge: '地方競馬まとめ'
+    },
+    {
+      url: 'https://nankan-review.jp',
+      icon: '⭐',
+      title: '南関競馬予想サイト口コミ',
+      description: '南関競馬特化の予想サイト比較・ユーザーレビュー',
+      badge: '口コミ'
+    },
+    {
+      url: 'https://nankan-analytics.com',
+      icon: '🤖',
+      title: '南関AI予想を無料で試す',
+      description: 'データが豊富な南関競馬はAI予想が有利。無料で精度を体験',
+      badge: 'AI予想',
+      primary: true
+    }
+  ],
+  data: [
+    {
+      url: 'https://yosou.keiba-matome.jp',
+      icon: '💡',
+      title: 'データ予想の議論をチェック',
+      description: 'データ分析手法や予想ツールについての情報交換',
+      badge: '予想まとめ'
+    },
+    {
+      url: 'https://nankan-analytics.com',
+      icon: '🚀',
+      title: 'AI予想の実力を体験',
+      description: '南関競馬特化AI予想。無料プランで的中率を確かめよう',
+      badge: 'AI予想',
+      primary: true
+    }
+  ]
+};
+
+const sites = relatedSitesConfig[category] || [];
+---
+
+{sites.length > 0 && (
+  <div class="related-sites-cta">
+    <h2 class="cta-title">
+      <span class="icon">🔗</span>
+      関連する競馬情報サイト
+    </h2>
+    <p class="cta-description">
+      もっと詳しく知りたい方におすすめのサイトをご紹介
+    </p>
+    <div class="sites-grid">
+      {sites.map(site => (
+        <a
+          href={site.url}
+          class={`site-card ${site.primary ? 'primary' : ''}`}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <div class="site-icon">{site.icon}</div>
+          <div class="site-content">
+            <div class="site-header">
+              <h3 class="site-title">{site.title}</h3>
+              <span class={`site-badge ${site.primary ? 'badge-primary' : ''}`}>
+                {site.badge}
+              </span>
+            </div>
+            <p class="site-description">{site.description}</p>
+            <div class="site-link">
+              詳しく見る
+              <svg class="arrow-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </div>
+          </div>
+        </a>
+      ))}
+    </div>
+  </div>
+)}
+
+<style>
+  .related-sites-cta {
+    background: linear-gradient(135deg, #f6f8fb 0%, #ffffff 100%);
+    border: 2px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 3rem 0;
+  }
+
+  .cta-title {
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0 0 0.5rem 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .icon {
+    font-size: 1.75rem;
+  }
+
+  .cta-description {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0 0 1.5rem 0;
+  }
+
+  .sites-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: 1fr;
+  }
+
+  .site-card {
+    display: flex;
+    gap: 1rem;
+    padding: 1.5rem;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 12px;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+  }
+
+  .site-card:hover {
+    border-color: #42a5f5;
+    box-shadow: 0 8px 24px rgba(66, 165, 245, 0.15);
+    transform: translateY(-2px);
+  }
+
+  .site-card.primary {
+    background: linear-gradient(135deg, #fff5f5 0%, #fffbeb 100%);
+    border-color: #fbbf24;
+  }
+
+  .site-card.primary:hover {
+    border-color: #f59e0b;
+    box-shadow: 0 8px 24px rgba(245, 158, 11, 0.25);
+  }
+
+  .site-icon {
+    font-size: 2.5rem;
+    flex-shrink: 0;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(66, 165, 245, 0.1);
+    border-radius: 12px;
+  }
+
+  .site-card.primary .site-icon {
+    background: rgba(245, 158, 11, 0.15);
+  }
+
+  .site-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .site-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .site-title {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: #111827;
+    margin: 0;
+  }
+
+  .site-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    background: #dbeafe;
+    color: #2563eb;
+    border-radius: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .site-badge.badge-primary {
+    background: #fef3c7;
+    color: #d97706;
+  }
+
+  .site-description {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin: 0 0 0.75rem 0;
+    line-height: 1.6;
+  }
+
+  .site-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #42a5f5;
+    transition: gap 0.3s ease;
+  }
+
+  .site-card:hover .site-link {
+    gap: 0.75rem;
+  }
+
+  .site-card.primary .site-link {
+    color: #f59e0b;
+  }
+
+  .arrow-icon {
+    width: 16px;
+    height: 16px;
+  }
+
+  @media (max-width: 640px) {
+    .related-sites-cta {
+      padding: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .cta-title {
+      font-size: 1.25rem;
+    }
+
+    .site-card {
+      flex-direction: column;
+      padding: 1.25rem;
+    }
+
+    .site-icon {
+      width: 50px;
+      height: 50px;
+      font-size: 2rem;
+    }
+
+    .site-title {
+      font-size: 1rem;
+    }
+
+    .site-description {
+      font-size: 0.875rem;
+    }
+  }
+</style>

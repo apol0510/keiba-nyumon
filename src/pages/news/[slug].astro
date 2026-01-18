@@ -3,6 +3,7 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
 import { getNewsBySlug, getLatestNews } from '../../lib/news';
 import { config } from '../../config';
 import NankanAnalyticsCTA from '../../components/NankanAnalyticsCTA.astro';
+import RelatedSitesCTA from '../../components/RelatedSitesCTA.astro';
 
 // 動的ルーティング用
 export async function getStaticPaths() {
@@ -259,6 +260,9 @@ const ogImage = article.thumbnail || categoryOgImages[article.category] || '/og/
     {(article.category === 'nankan' || article.category === 'data') && (
       <NankanAnalyticsCTA variant={article.category === 'data' ? 'data' : 'nankan'} />
     )}
+
+    <!-- 関連サイトCTA（カテゴリ別） -->
+    <RelatedSitesCTA category={article.category} />
 
     <!-- SNSシェアボタン -->
     <div class="share-buttons">
