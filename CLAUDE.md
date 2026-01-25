@@ -3,7 +3,7 @@
 ## 🚨 プロジェクト識別
 
 **このプロジェクト**: keiba-nyumon (競馬入門ガイド)
-**作業ディレクトリ**: `/Users/apolon/Library/Mobile Documents/com~apple~CloudDocs/WorkSpace/keiba-nyumon/`
+**作業ディレクトリ**: `/Users/apolon/Projects/keiba-nyumon/`
 **GitHubリポジトリ**: https://github.com/apol0510/keiba-nyumon（予定）
 
 **プロジェクトタイプ**: 独立プロジェクト（Phase 2でmonorepo化予定）
@@ -14,7 +14,7 @@
 
 ### 目的と位置づけ
 
-**最終目標**: `/WorkSpace/nankan-analytics` の売上アップ
+**最終目標**: `/Users/apolon/Projects/nankan-analytics` の売上アップ
 
 **トラフィック導線**:
 ```
@@ -331,7 +331,7 @@ Netlify Dashboard → Site settings → Environment variables
 
 ```bash
 # ローカルから手動デプロイ
-cd /Users/apolon/Library/Mobile\ Documents/com~apple~CloudDocs/WorkSpace/keiba-nyumon
+cd /Users/apolon/Projects/keiba-nyumon
 netlify deploy --prod
 ```
 
@@ -468,15 +468,15 @@ npm run build
 
 ## 参照ドキュメント
 
-- 本番の口コミサイト: `/Users/apolon/.../Keiba review platform/keiba-review-platform/`
-- nankan-analytics: `/Users/apolon/.../WorkSpace/nankan-analytics/`
+- 本番の口コミサイト: `/Users/apolon/Projects/keiba-review-monorepo/`
+- nankan-analytics: `/Users/apolon/Projects/nankan-analytics/`
 
 ---
 
 ## 現在のプロジェクト構成（2025-12-26時点）
 
 ```
-/Users/apolon/Library/Mobile Documents/com~apple~CloudDocs/WorkSpace/
+/Users/apolon/Projects/
 ├── Keiba review platform/
 │   └── keiba-review-platform/    # 本番の口コミサイト（https://keiba-review.jp/）
 ├── keiba-nyumon/                  # 初心者向け入門サイト（Phase 1）
